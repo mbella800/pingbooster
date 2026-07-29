@@ -1,0 +1,12 @@
+[package]
+name = "pb-core"
+version = "0.1.0"
+description = "Session lifecycle and the invariants that must hold across it."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+pb-proto.workspace = true
+pb-probe.workspace = true

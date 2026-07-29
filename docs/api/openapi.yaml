@@ -1,0 +1,439 @@
+openapi: 3.1.0
+
+# The contract shared by the desktop client, the mobile clients and the website.
+#
+# This file is the source of truth: change the spec first, then both consumers. The
+# specific failure this prevents is the website computing "is premium" from a Stripe
+# field while the app asks /v1/entitlements — they will disagree, and a user who paid
+# will be told on one surface that they haven't. Adding an endpoint here is cheap;
+# reconciling two divergent notions of subscription state in production is not.
+
+info:
+  title: PingBooster control plane
+  version: 0.1.0
+  description: |
+    Auth, entitlements, node directory, signed config, telemetry and rewards.
+
+    Design rules that callers depend on:
+
+    - **Entitlements are capability-shaped, not plan-shaped.** Clients ask "may I use
+      dual-path?", never "is the user on plan X". Repricing then never needs a client
+      release.
+    - **The directory returns candidates, not a verdict.** The client measures and
+      decides, because the last mile is the segment the server cannot see and the one
+      that varies most.
+    - **Config blobs are signed independently of TLS.** Clients verify against a pinned
+      key and enforce monotonic versions plus expiry. TLS authenticates the CDN; it does
+      nothing about a compromised CDN account, and this config decides where user traffic
+      is sent.
+
+servers:
+  - url: https://api.pingbooster.example/
+    description: production (placeholder — not yet provisioned)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: auth
+  - name: entitlements
+  - name: directory
+  - name: config
+  - name: telemetry
+  - name: rewards
+
+paths:
+  /v1/auth/device:
+    post:
+      tags: [auth]
+      summary: Begin device authorization (RFC 8628)
+      description: |
+        For consoles and any surface without a usable browser. Desktop and web use
+        authorization code + PKCE against the identity provider directly — the desktop
+        client opens the *system* browser rather than an embedded webview, because
+        embedded webviews break password managers and passkeys and train users to type
+        credentials into a window whose origin they cannot verify.
+      security: []
+      responses:
+        "200":
+          description: Device and user codes issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [device_code, user_code, verification_uri, expires_in, interval]
+                properties:
+                  device_code: { type: string }
+                  user_code: { type: string, examples: ["WDJB-MJHT"] }
+                  verification_uri: { type: string, format: uri }
+                  expires_in: { type: integer, description: Seconds }
+                  interval: { type: integer, description: Minimum poll interval, seconds }
+
+  /v1/auth/token:
+    post:
+      tags: [auth]
+      summary: Exchange or refresh tokens
+      description: |
+        Refresh tokens rotate on every use, and reuse of a consumed refresh token
+        invalidates the whole chain — that is what turns a stolen token into a detectable
+        event rather than durable access.
+
+        On desktop, refresh tokens are stored via DPAPI bound to the machine, so they are
+        not readable by other users of a shared PC.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [grant_type]
+              properties:
+                grant_type:
+                  type: string
+                  enum: [refresh_token, urn:ietf:params:oauth:grant-type:device_code]
+                refresh_token: { type: string }
+                device_code: { type: string }
+      responses:
+        "200":
+          description: Tokens issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [access_token, refresh_token, expires_in, token_type]
+                properties:
+                  access_token: { type: string }
+                  refresh_token: { type: string }
+                  expires_in: { type: integer, examples: [900] }
+                  token_type: { type: string, enum: [Bearer] }
+        "400":
+          $ref: "#/components/responses/Problem"
+
+  /v1/entitlements:
+    get:
+      tags: [entitlements]
+      summary: What this user may do
+      description: |
+        The single source of truth. Stripe, Apple IAP and Google Play Billing are *inputs*
+        to a normalised record; clients never see provider concepts.
+
+        `state` distinguishes `active` from `grace` deliberately: a failed payment starts
+        a documented dunning window during which access persists. Cutting access the
+        instant a card declines is both hostile and bad for revenue.
+      responses:
+        "200":
+          description: Current entitlement
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Entitlement" }
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/directory/nodes:
+    get:
+      tags: [directory]
+      summary: Candidate PoPs worth probing
+      description: |
+        Narrows the fleet to a handful of candidates based on coarse geography and current
+        health. The client then measures them, along with the direct path, and decides.
+
+        Deliberately not "your best node": server-side selection is guesswork about the
+        last mile.
+      parameters:
+        - name: game_id
+          in: query
+          schema: { type: integer }
+          description: Narrows candidates to those with measured paths to this game's servers.
+        - name: limit
+          in: query
+          schema: { type: integer, default: 8, maximum: 32 }
+      responses:
+        "200":
+          description: Signed candidate list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [manifest, nodes, signature]
+                properties:
+                  manifest: { $ref: "#/components/schemas/ConfigManifest" }
+                  nodes:
+                    type: array
+                    items: { $ref: "#/components/schemas/Node" }
+                  signature:
+                    type: string
+                    description: ed25519 over the canonical encoding of manifest+nodes.
+
+  /v1/config/{kind}:
+    get:
+      tags: [config]
+      summary: Fetch a signed config manifest
+      description: |
+        Returns a manifest plus a CDN URL for the blob. The client verifies the signature
+        against a pinned public key, then applies the acceptance rules implemented in
+        `pb-proto::config::accept`: reject anything not strictly newer than what it holds
+        (blocks replay of validly-signed older config), and reject anything past expiry
+        (bounds a withheld-update attack). Signatures alone catch neither.
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [game-database, route-matrix, node-directory, campaigns]
+        - name: have_version
+          in: query
+          schema: { type: integer, format: int64 }
+          description: Version currently held; enables a 304.
+      responses:
+        "200":
+          description: Manifest and blob location
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [manifest, url, signature]
+                properties:
+                  manifest: { $ref: "#/components/schemas/ConfigManifest" }
+                  url: { type: string, format: uri }
+                  signature: { type: string }
+        "304":
+          description: Client already holds the current version.
+
+  /v1/telemetry/sessions:
+    post:
+      tags: [telemetry]
+      summary: Report aggregated session measurements
+      description: |
+        Feeds the route matrix — the network gets better as it gains users.
+
+        Privacy constraints are part of the contract, not just policy: send
+        **measurements, never traffic**; aggregate destination addresses to /24 before
+        they leave the device, and only for addresses already identified as game servers.
+        We are building a map of game infrastructure, not of users.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sessions]
+              properties:
+                sessions:
+                  type: array
+                  maxItems: 100
+                  items: { $ref: "#/components/schemas/SessionReport" }
+      responses:
+        "202":
+          description: Accepted.
+
+  /v1/rewards/campaigns:
+    get:
+      tags: [rewards]
+      summary: Active third-party Drops campaigns (informational)
+      description: |
+        Powers the in-app Drops tracker. **Informational only.** We surface publicly
+        available campaign data; we cannot create or grant Drops for games we do not own —
+        that requires a Twitch organisation that owns the game category plus the game's own
+        entitlement service. See `docs/architecture/05-rewards-and-drops.md`.
+      security: []
+      responses:
+        "200":
+          description: Active campaigns
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [campaigns]
+                properties:
+                  campaigns:
+                    type: array
+                    items: { $ref: "#/components/schemas/Campaign" }
+
+  /v1/rewards/redeem:
+    post:
+      tags: [rewards]
+      summary: Redeem a reward the user is eligible for
+      description: |
+        Eligibility is evaluated server-side against entitlements and never asserted by the
+        client. Claiming is atomic so a one-time code cannot be issued twice under
+        concurrency — telling two users they own the same item is a support and reputation
+        problem out of proportion to the bug. Code values are never logged.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaign_id]
+              properties:
+                campaign_id: { type: string }
+      responses:
+        "200":
+          description: Reward granted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [kind]
+                properties:
+                  kind:
+                    type: string
+                    enum: [premium_days, code]
+                  premium_days: { type: integer }
+                  code:
+                    type: string
+                    description: One-time redemption code. Display once; never logged server-side.
+                  instructions: { type: string }
+        "409":
+          description: Already redeemed, or inventory exhausted.
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Problem:
+      description: Error
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+
+  schemas:
+    Problem:
+      type: object
+      description: RFC 9457 problem details.
+      required: [type, title, status]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+
+    Entitlement:
+      type: object
+      required: [state, capabilities]
+      properties:
+        state:
+          type: string
+          enum: [none, trial, active, grace, expired]
+          description: |
+            `grace` means payment failed but access persists through the dunning window.
+            Clients must treat `grace` exactly as `active`.
+        expires_at: { type: string, format: date-time }
+        capabilities:
+          type: object
+          description: |
+            Capability-shaped, not plan-shaped. Clients gate on these, never on a plan name.
+          properties:
+            premium_pops: { type: boolean }
+            dual_path: { type: boolean, description: Path duplication }
+            chained_relay: { type: boolean }
+            max_devices: { type: integer }
+            max_concurrent_sessions: { type: integer }
+        source:
+          type: string
+          enum: [stripe, apple_iap, google_play, promo, reward]
+          description: Diagnostic only. Clients must not branch on this.
+
+    Node:
+      type: object
+      required: [pop_id, region, endpoints]
+      properties:
+        pop_id: { type: integer }
+        region: { type: string, examples: ["sg-sin", "de-fra"] }
+        city: { type: string }
+        endpoints:
+          type: array
+          description: Data-plane endpoints. Unicast, not anycast — a session must know its PoP.
+          items:
+            type: object
+            required: [address, port, transport]
+            properties:
+              address: { type: string }
+              port: { type: integer }
+              transport: { type: string, enum: [udp, quic443] }
+        load:
+          type: number
+          description: 0.0–1.0. A hint for probe ordering, not a selection verdict.
+        premium: { type: boolean }
+
+    ConfigManifest:
+      type: object
+      required: [kind, version, expires_at]
+      properties:
+        kind:
+          type: string
+          enum: [game-database, route-matrix, node-directory, campaigns]
+        version:
+          type: integer
+          format: int64
+          description: Strictly increasing. Clients reject anything not newer.
+        expires_at:
+          type: integer
+          format: int64
+          description: Unix seconds. Clients reject expired config.
+
+    SessionReport:
+      type: object
+      required: [game_id, accelerated, paths]
+      properties:
+        game_id: { type: integer }
+        accelerated:
+          type: boolean
+          description: |
+            False is a normal and frequent outcome — the direct path often wins. Reported
+            so we can measure how often we correctly decline, which is as important as
+            measuring how often we help.
+        decline_reason:
+          type: string
+          enum: [already_optimal, gain_too_small, no_overlay_candidates, no_baseline, network_blocks_tunnel]
+        duplication:
+          type: string
+          enum: [single, dual]
+        paths:
+          type: array
+          items:
+            type: object
+            required: [path_kind, rtt_p50_ms, rtt_p95_ms, jitter_ms, loss, samples]
+            properties:
+              path_kind: { type: string, enum: [direct, relay, chained] }
+              pop_ingress: { type: integer }
+              pop_egress: { type: integer }
+              rtt_p50_ms: { type: number }
+              rtt_p95_ms: { type: number }
+              jitter_ms:
+                type: number
+                description: Mean absolute successive difference, not standard deviation.
+              loss: { type: number, minimum: 0, maximum: 1, description: Fraction, not percent. }
+              samples: { type: integer }
+        server_prefix:
+          type: string
+          description: Game server address aggregated to /24. Never a full address.
+
+    Campaign:
+      type: object
+      required: [id, source, game_name, reward_name]
+      properties:
+        id: { type: string }
+        source:
+          type: string
+          enum: [twitch_drops, pingbooster]
+          description: |
+            `twitch_drops` entries are informational — third-party campaigns we surface but
+            do not operate. `pingbooster` entries are our own rewards, which we can grant.
+        game_name: { type: string }
+        reward_name: { type: string }
+        watch_minutes: { type: integer }
+        ends_at: { type: string, format: date-time }
+        stream_url: { type: string, format: uri }
+        redeemable:
+          type: boolean
+          description: True only for `pingbooster` campaigns. Never true for `twitch_drops`.
