@@ -15,13 +15,13 @@
           <span>PING <b>OPTIMIZER</b></span>
         </div>
         <nav>
-          <button class="nav-item active" data-view="home"><span>H</span>Home</button>
-          <button class="nav-item" data-view="games"><span>G</span>Games</button>
-          <button class="nav-item" data-view="network"><span>N</span>Network</button>
-          <button class="nav-item" data-view="performance"><span>P</span>Performance</button>
-          <button class="nav-item" data-view="tools"><span>T</span>Repair tools</button>
-          <button class="nav-item" data-view="history"><span>R</span>History</button>
-          <button class="nav-item" data-view="settings"><span>S</span>Settings</button>
+          <button class="nav-item active" data-view="home"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.2 12 4l9 7.2M5.5 9.7V20h13V9.7M9.8 20v-5.6h4.4V20"/></svg></span>Home</button>
+          <button class="nav-item" data-view="games"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 12h4M9 10v4M15.5 11.2h.01M17.8 13.2h.01M6.4 7.5h11.2A3.4 3.4 0 0 1 21 11v2a3.4 3.4 0 0 1-3.4 3.4H6.4A3.4 3.4 0 0 1 3 13v-2a3.4 3.4 0 0 1 3.4-3.5Z"/></svg></span>Games</button>
+          <button class="nav-item" data-view="network"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg></span>Network</button>
+          <button class="nav-item" data-view="performance"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M9.3 20V5M14.7 20v-8M20 20V8"/></svg></span>Performance</button>
+          <button class="nav-item" data-view="tools"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 6.2a3.9 3.9 0 0 1 5.3 5.3l-8.4 8.4-5.3-5.3 8.4-8.4ZM4 20l2-2M9.4 8.7 4.5 3.8M3.8 9.4 8.7 4.5"/></svg></span>Repair tools</button>
+          <button class="nav-item" data-view="history"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.2 12a8.8 8.8 0 1 0 2.6-6.2M3.2 4.5V9h4.5M12 7.8V12l3.2 1.9"/></svg></span>History</button>
+          <button class="nav-item" data-view="settings"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2ZM19.2 14.3a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-2.87 1.2v.17a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-2.93-1.16l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 3.7 14.3H3.5a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.75 7.3l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.5 3.3V3.2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 2.87 1.2l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.55 1.03h.17a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.02Z"/></svg></span>Settings</button>
         </nav>
         <div class="sidebar-status">
           <i></i>
@@ -46,9 +46,9 @@
 
         <section class="view active" data-view-panel="home">
           <div class="metric-grid">
-            <article><small>NETWORK RESPONSE</small><strong id="metric-latency">-<i> ms</i></strong><span id="latency-status">Not measured</span></article>
-            <article><small>JITTER</small><strong id="metric-jitter">-<i> ms</i></strong><span id="jitter-status">Not measured</span></article>
-            <article><small>FAILED PROBES</small><strong id="metric-loss">-<i>%</i></strong><span id="loss-status">Not measured</span></article>
+            <article><small>NETWORK RESPONSE</small><strong id="metric-latency"><span class="metric-empty">–</span><i> ms</i></strong><span id="latency-status">Not measured</span></article>
+            <article><small>JITTER</small><strong id="metric-jitter"><span class="metric-empty">–</span><i> ms</i></strong><span id="jitter-status">Not measured</span></article>
+            <article><small>FAILED PROBES</small><strong id="metric-loss"><span class="metric-empty">–</span><i>%</i></strong><span id="loss-status">Not measured</span></article>
             <article class="metric-ready"><small>ROLLBACK</small><strong>READY</strong><span>Temporary changes only</span></article>
           </div>
 
@@ -57,7 +57,7 @@
               <div class="game-ambient"></div>
               <div class="game-topline"><span>GAME DETECTION</span><b id="detection-state">SCANNING</b></div>
               <div class="game-identity">
-                <span class="game-icon">A</span>
+                <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/></svg></span>
                 <div>
                   <small id="game-label">SELECTED GAME</small>
                   <h2 id="game-name">Other game</h2>
@@ -113,9 +113,8 @@
               </div>
 
               <button id="optimize" class="optimize-button">
-                <span class="button-icon">&#9889;</span>
-                <span id="optimize-label">DIAGNOSE &amp; OPTIMIZE</span>
-                <i>&rsaquo;&rsaquo;</i>
+                <span id="optimize-label">Diagnose &amp; optimize</span>
+                <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
               </button>
               <p class="honesty-note">Relay routing is locked in this preview. Diagnostics and reversible PC tuning are live.</p>
             </article>
@@ -126,10 +125,10 @@
                 <span id="evidence-badge">WAITING</span>
               </div>
               <div class="evidence-list">
-                <div class="evidence-item"><span class="evidence-icon">R</span><div><strong>Edge response</strong><small id="route-detail">Measure independent public test edges</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon">J</span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon">L</span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon">B</span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM17.5 20.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM6.5 8.5v3a3 3 0 0 0 3 3h5a3 3 0 0 1 3 3v0"/></svg></span><div><strong>Edge response</strong><small id="route-detail">Measure independent public test edges</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 12h3.2l2.1-6.4 3.4 12.8 2.6-8.3 1.9 4.4 1.4-2.5h4.4"/></svg></span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2 4 6.4v5.1c0 4.4 3.3 8.1 8 9.3 4.7-1.2 8-4.9 8-9.3V6.4L12 3.2ZM9.6 11.8l1.9 1.9 3.4-3.4"/></svg></span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3ZM3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
               </div>
               <div class="safe-card">
                 <span>&check;</span>
@@ -263,6 +262,7 @@
     </div>
 
     <div id="toast" role="status" aria-live="polite"></div>
+    <script src="game-art.js"></script>
     <script src="renderer.js"></script>
   </body>
 </html>

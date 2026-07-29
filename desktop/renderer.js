@@ -50,14 +50,19 @@ function escapeHtml(value) {
 }
 
 function setMetric(id, value, status) {
-  const metric = document.querySelector(`#metric-${id}`);
-  if (metric?.firstChild) metric.firstChild.nodeValue = value ?? "-";
+  const slot = document.querySelector(`#metric-${id} .metric-empty, #metric-${id} .metric-value`);
+  if (slot) {
+    const empty = value === null || value === undefined;
+    slot.textContent = empty ? "\u2013" : String(value);
+    slot.className = empty ? "metric-empty" : "metric-value";
+  }
   document.querySelector(`#${id}-status`).textContent = status;
 }
 
 function updateGame(name, detected = false) {
   gameName.textContent = name;
-  gameIcon.textContent = name.slice(0, 1).toUpperCase();
+  window.gameArt.applyArt(gameIcon, name);
+  gameIcon.innerHTML = window.gameArt.artGlyph(name);
   gameLabel.textContent = detected ? "RUNNING GAME DETECTED" : "SELECTED GAME";
   gameSelect.value = [...gameSelect.options].some((option) => option.value === name)
     ? name
@@ -139,14 +144,21 @@ function renderGames() {
     const running = detectedGame?.process?.toLowerCase() === game.process.toLowerCase();
     const card = document.createElement("article");
     card.className = "game-profile";
+    // Per-game colour and genre glyph rather than the first letter of the name.
+    // A wall of single letters reads as unfinished, and gives players nothing to
+    // recognise their game by.
+    window.gameArt.applyArt(card, game.name);
     card.innerHTML = `
+      <div class="profile-art" aria-hidden="true">
+        <span class="profile-wash"></span>
+        ${window.gameArt.artGlyph(game.name)}
+      </div>
       <div class="game-profile-top">
-        <span class="profile-icon">${escapeHtml(game.name.slice(0, 1).toUpperCase())}</span>
         <span class="profile-state ${running ? "running" : ""}">${running ? "RUNNING" : "READY"}</span>
       </div>
       <h3>${escapeHtml(game.name)}</h3>
       <p>${escapeHtml(game.recommendedMode)} profile &middot; Automatic process matching</p>
-      <button type="button">USE THIS PROFILE &rarr;</button>
+      <button type="button">Use this profile &rarr;</button>
     `;
     card.querySelector("button").addEventListener("click", () => {
       updateGame(game.name, running);
