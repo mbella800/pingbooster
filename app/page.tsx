@@ -1,28 +1,55 @@
 import Image from "next/image";
+import { MotionRuntime } from "./MotionRuntime";
 
 const steps = [
   {
     number: "01",
     title: "Detect",
     copy: "Ping Optimizer recognizes the running game and the server region without touching game memory.",
+    result: "Game + region found",
+    meta: "PROCESS SCAN",
   },
   {
     number: "02",
     title: "Compare",
     copy: "It measures your direct connection against available routes for latency, jitter, loss, and stability.",
+    result: "Best path verified",
+    meta: "LIVE TEST",
   },
   {
     number: "03",
     title: "Optimize",
     copy: "Only a route that measures better is applied. Temporary changes are restored when the session ends.",
+    result: "Rollback armed",
+    meta: "SAFE APPLY",
   },
 ];
 
 const gameModes = [
-  ["Competitive", "Prioritizes stable input timing, low jitter, and packet-loss protection."],
-  ["MMO & RPG", "Favors long-session stability and protects against sudden route degradation."],
-  ["Cloud gaming", "Balances latency with bandwidth, pacing, and congestion control."],
-  ["Any other game", "Universal mode follows the game process and learns its network destinations."],
+  {
+    code: "FPS",
+    title: "Competitive",
+    copy: "Stable input timing, low jitter, and packet-loss protection.",
+    signal: "Latency first",
+  },
+  {
+    code: "RPG",
+    title: "MMO & RPG",
+    copy: "Long-session stability with protection from route degradation.",
+    signal: "Stability first",
+  },
+  {
+    code: "CG",
+    title: "Cloud gaming",
+    copy: "Latency, bandwidth, pacing, and congestion tuned together.",
+    signal: "Stream balance",
+  },
+  {
+    code: "ANY",
+    title: "Any other game",
+    copy: "Universal mode follows the process and learns its destinations.",
+    signal: "Auto profile",
+  },
 ];
 
 const faqs = [
@@ -47,6 +74,7 @@ const faqs = [
 export default function Home() {
   return (
     <main>
+      <MotionRuntime />
       <nav className="site-nav" aria-label="Main navigation">
         <a className="brand" href="#top" aria-label="Ping Optimizer home">
           <span className="brand-mark" aria-hidden="true">
@@ -62,49 +90,152 @@ export default function Home() {
           <a href="#proof">Proof</a>
           <a href="#beta">Beta</a>
         </div>
+        <details className="mobile-menu">
+          <summary aria-label="Open navigation">Menu <span>+</span></summary>
+          <div>
+            <a href="#product">Product</a>
+            <a href="#how">How it works</a>
+            <a href="#proof">Proof</a>
+            <a href="#beta">Beta</a>
+          </div>
+        </details>
         <a className="button button-small" href="#beta">
           Get early access
         </a>
       </nav>
 
-      <section className="hero" id="top">
+      <section className="hero hero-v2" id="top">
         <div className="hero-glow hero-glow-one" />
         <div className="hero-glow hero-glow-two" />
-        <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="live-dot" /> Private European beta
-          </p>
-          <h1>
-            One button.
-            <br />
-            <span>A measurably better route.</span>
-          </h1>
-          <p className="hero-lede">
-            Ping Optimizer detects your game, compares every available path,
-            and applies only changes that prove they perform better.
-          </p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#beta">
-              Join the free beta <span aria-hidden="true">↗</span>
-            </a>
-            <a className="text-link" href="#how">
-              See how it works <span aria-hidden="true">↓</span>
-            </a>
+        <div className="hero-beam" aria-hidden="true" />
+
+        <div className="hero-layout">
+          <div className="hero-copy">
+            <p className="eyebrow hero-eyebrow">
+              <span className="live-dot" /> Windows technical preview
+            </p>
+            <h1>
+              Lower ping.
+              <br />
+              <span>Prove the difference.</span>
+            </h1>
+            <p className="hero-lede">
+              One click detects your game, tests the connection, and keeps the
+              direct route unless another path measures better.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary button-download" href="#beta">
+                Download for Windows <span aria-hidden="true">↓</span>
+              </a>
+              <a className="text-link" href="#product">
+                Watch it work <span aria-hidden="true">↘</span>
+              </a>
+            </div>
+            <div className="launch-stats" aria-label="Technical preview facts">
+              <div>
+                <strong data-counter="12" data-suffix="+">12+</strong>
+                <span>Launch profiles</span>
+              </div>
+              <div>
+                <strong data-counter="3">3</strong>
+                <span>Diagnostic edges</span>
+              </div>
+              <div>
+                <strong data-counter="100" data-suffix="%">100%</strong>
+                <span>Reversible</span>
+              </div>
+            </div>
           </div>
-          <div className="hero-assurances" aria-label="Product assurances">
-            <span>Every game</span>
-            <span>Real measurements</span>
-            <span>Safe rollback</span>
+
+          <div className="network-stage" aria-label="Animated route comparison">
+            <div className="stage-grid" aria-hidden="true" />
+            <div className="stage-glow" aria-hidden="true" />
+            <div className="orbit orbit-one" aria-hidden="true" />
+            <div className="orbit orbit-two" aria-hidden="true" />
+            <div className="orbit orbit-three" aria-hidden="true" />
+            <div className="route-arc route-arc-one" aria-hidden="true">
+              <i /><i /><i />
+            </div>
+            <div className="route-arc route-arc-two" aria-hidden="true">
+              <i /><i />
+            </div>
+            <div className="network-node node-user">
+              <i />
+              <span>YOU</span>
+              <small>Berlin</small>
+            </div>
+            <div className="network-node node-ams">
+              <i />
+              <span>AMS</span>
+              <small>38 ms</small>
+            </div>
+            <div className="network-node node-fra">
+              <i />
+              <span>FRA</span>
+              <small>52 ms</small>
+            </div>
+            <div className="route-status-card">
+              <div className="route-status-head">
+                <span><i /> LIVE ROUTE TEST</span>
+                <b>MEASURING</b>
+              </div>
+              <div className="route-score-row">
+                <div><small>DIRECT</small><strong>52<span>ms</span></strong></div>
+                <div className="route-arrow"><i /><b>−14 ms</b></div>
+                <div><small>OPTIMIZED</small><strong className="accent">38<span>ms</span></strong></div>
+              </div>
+              <div className="route-bars">
+                <span><i /></span><span><i /></span><span><i /></span>
+              </div>
+            </div>
+            <div className="stage-chip chip-game">
+              <span>GAME DETECTED</span><strong>Arena Strike</strong>
+            </div>
+            <div className="stage-chip chip-safe">
+              <span>ROLLBACK</span><strong>Ready ✓</strong>
+            </div>
           </div>
         </div>
 
-        <div className="hero-visual" id="product">
+        <div className="live-console" id="product">
+          <div className="console-status">
+            <span className="console-game-icon">A</span>
+            <div><small>GAME DETECTED</small><strong>ARENA STRIKE</strong></div>
+          </div>
+          <div className="console-metric"><small>Direct</small><strong>52 <i>ms</i></strong></div>
+          <div className="console-pulse" aria-hidden="true"><i /><i /><i /><i /><i /></div>
+          <div className="console-metric accent"><small>Best route</small><strong>38 <i>ms</i></strong></div>
+          <div className="console-metric console-hide-mobile"><small>Jitter</small><strong>3 <i>ms</i></strong></div>
+          <a className="console-button" href="#beta"><span>ϟ</span> OPTIMIZE &amp; PLAY <i>››</i></a>
+        </div>
+      </section>
+
+      <section className="game-marquee" aria-label="Example supported games">
+        <div className="marquee-track">
+          {[
+            "FORTNITE", "VALORANT", "COUNTER-STRIKE 2", "APEX LEGENDS",
+            "LEAGUE OF LEGENDS", "ROBLOX", "ROCKET LEAGUE", "EVERY GAME",
+            "FORTNITE", "VALORANT", "COUNTER-STRIKE 2", "APEX LEGENDS",
+            "LEAGUE OF LEGENDS", "ROBLOX", "ROCKET LEAGUE", "EVERY GAME",
+          ].map((game, index) => (
+            <span key={`${game}-${index}`}><i />{game}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="section product-showcase" aria-label="Desktop app preview">
+        <div className="showcase-copy" data-reveal>
+          <p className="eyebrow">The whole session, visible</p>
+          <h2>Not a magic button. A transparent one.</h2>
+          <p>
+            See the detected game, measured route, expected change, and every
+            setting before anything touches your session.
+          </p>
+          <a className="text-link" href="#proof">Explore session proof <span>→</span></a>
+        </div>
+        <div className="hero-visual showcase-window" data-reveal>
           <div className="window-chrome">
-            <div className="window-dots" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </div>
+            <div className="window-dots" aria-hidden="true"><i /><i /><i /></div>
             <span>Ping Optimizer — Session preview</span>
             <span className="preview-pill">LIVE</span>
           </div>
@@ -113,34 +244,22 @@ export default function Home() {
             width={1628}
             height={966}
             priority
+            unoptimized
             alt="Ping Optimizer desktop application showing a detected game, route improvement, and Optimize and Play button"
           />
+          <div className="scan-line" aria-hidden="true" />
           <div className="result-float result-float-left">
-            <small>Expected improvement</small>
-            <strong>−14 ms</strong>
+            <small>Expected improvement</small><strong>−14 ms</strong>
           </div>
           <div className="result-float result-float-right">
             <span className="shield-check">✓</span>
-            <div>
-              <strong>Safe to apply</strong>
-              <small>Automatic rollback ready</small>
-            </div>
+            <div><strong>Safe to apply</strong><small>Automatic rollback ready</small></div>
           </div>
-        </div>
-      </section>
-
-      <section className="trust-row" aria-label="Product principles">
-        <p>Built around proof, not promises.</p>
-        <div>
-          <span>PROCESS DETECTION</span>
-          <span>ROUTE COMPARISON</span>
-          <span>LIVE MONITORING</span>
-          <span>SESSION HISTORY</span>
         </div>
       </section>
 
       <section className="section" id="how">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal>
           <p className="eyebrow">One click, three decisions</p>
           <h2>The complexity stays behind the button.</h2>
           <p>
@@ -150,20 +269,29 @@ export default function Home() {
         </div>
         <div className="step-grid">
           {steps.map((step) => (
-            <article className="step-card" key={step.number}>
-              <span>{step.number}</span>
+            <article className="step-card" data-reveal key={step.number}>
+              <div className="step-topline">
+                <span>{step.number}</span>
+                <b>{step.meta}</b>
+              </div>
               <div className={`step-icon step-icon-${step.number}`}>
                 <i />
               </div>
-              <h3>{step.title}</h3>
-              <p>{step.copy}</p>
+              <div className="step-copy">
+                <h3>{step.title}</h3>
+                <p>{step.copy}</p>
+              </div>
+              <div className="step-result">
+                <i />
+                <span>{step.result}</span>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
       <section className="section proof-section" id="proof">
-        <div className="proof-copy">
+        <div className="proof-copy" data-reveal>
           <p className="eyebrow">The result, not the ritual</p>
           <h2>See exactly what changed.</h2>
           <p>
@@ -178,7 +306,7 @@ export default function Home() {
             <li>A confidence score for every recommendation</li>
           </ul>
         </div>
-        <div className="proof-card">
+        <div className="proof-card" data-reveal>
           <div className="proof-card-head">
             <div>
               <small>SESSION REPORT</small>
@@ -212,28 +340,35 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section games-section">
-        <div className="section-heading compact">
+      <section className="section games-section" id="modes">
+        <div className="section-heading compact" data-reveal>
           <p className="eyebrow">Every game, tuned differently</p>
           <h2>Universal support. Game-specific priorities.</h2>
         </div>
         <div className="mode-grid">
-          {gameModes.map(([title, copy], index) => (
-            <article key={title}>
-              <span>0{index + 1}</span>
-              <h3>{title}</h3>
-              <p>{copy}</p>
+          {gameModes.map((mode, index) => (
+            <article data-reveal key={mode.title}>
+              <div className="mode-topline">
+                <span>0{index + 1}</span>
+                <i>{mode.code}</i>
+              </div>
+              <h3>{mode.title}</h3>
+              <p>{mode.copy}</p>
+              <div className="mode-signal">
+                <b />
+                <span>{mode.signal}</span>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
       <section className="section comparison-section">
-        <div className="comparison-intro">
+        <div className="comparison-intro" data-reveal>
           <p className="eyebrow">A different kind of optimizer</p>
           <h2>More control without more confusion.</h2>
         </div>
-        <div className="comparison-table" role="table" aria-label="Product comparison">
+        <div className="comparison-table" data-reveal role="table" aria-label="Product comparison">
           <div className="comparison-row comparison-head" role="row">
             <span role="columnheader">Capability</span>
             <span role="columnheader">Typical booster</span>
@@ -255,45 +390,52 @@ export default function Home() {
       </section>
 
       <section className="section beta-section" id="beta">
-        <div className="beta-card">
-          <div>
+        <div className="beta-card" data-reveal>
+          <div className="beta-copy">
             <p className="eyebrow">Founding beta</p>
             <h2>Help us build the honest ping optimizer.</h2>
             <p>
               Test the Windows experience, share your route data, and shape
               which games and European regions we add first.
             </p>
+            <div className="beta-proof">
+              <span><i /> No payment card</span>
+              <span><i /> Reversible changes</span>
+              <span><i /> Local session history</span>
+            </div>
           </div>
           <div className="beta-offer">
-            <span>Windows preview</span>
+            <div className="offer-head">
+              <span>Windows technical preview</span>
+              <b>OPEN</b>
+            </div>
             <strong>€0 <small>during beta</small></strong>
             <ul>
-              <li>Interactive desktop preview</li>
-              <li>Connection diagnostics</li>
-              <li>Early routing-network access</li>
-              <li>No payment card required</li>
+              <li>Interactive interface tour</li>
+              <li>Browser connection check</li>
+              <li>No installer required</li>
             </ul>
             <a
               className="button button-primary button-block"
               href="/downloads/ping-optimizer-windows-preview.zip"
               download
             >
-              Download Windows preview
+              Download interface preview
             </a>
             <small className="offer-note">
-              Technical preview. Production game routing is still in
-              development.
+              Lightweight UI preview. The full Windows app is packaged
+              separately; production relay routing is still in development.
             </small>
           </div>
         </div>
       </section>
 
       <section className="section faq-section">
-        <div className="section-heading compact">
+        <div className="section-heading compact" data-reveal>
           <p className="eyebrow">Straight answers</p>
           <h2>Before you press Optimize.</h2>
         </div>
-        <div className="faq-list">
+        <div className="faq-list" data-reveal>
           {faqs.map(([question, answer]) => (
             <details key={question}>
               <summary>

@@ -15,108 +15,250 @@
           <span>PING <b>OPTIMIZER</b></span>
         </div>
         <nav>
-          <button class="nav-item active"><span>⌂</span>Home</button>
-          <button class="nav-item"><span>◇</span>Games</button>
-          <button class="nav-item"><span>◎</span>Network</button>
-          <button class="nav-item"><span>▥</span>Performance</button>
-          <button class="nav-item"><span>↶</span>History</button>
-          <button class="nav-item"><span>⚙</span>Settings</button>
+          <button class="nav-item active" data-view="home"><span>H</span>Home</button>
+          <button class="nav-item" data-view="games"><span>G</span>Games</button>
+          <button class="nav-item" data-view="network"><span>N</span>Network</button>
+          <button class="nav-item" data-view="performance"><span>P</span>Performance</button>
+          <button class="nav-item" data-view="tools"><span>T</span>Repair tools</button>
+          <button class="nav-item" data-view="history"><span>R</span>History</button>
+          <button class="nav-item" data-view="settings"><span>S</span>Settings</button>
         </nav>
         <div class="sidebar-status">
           <i></i>
-          <div><small>Preview status</small><strong>Ready</strong></div>
+          <div><small>System status</small><strong id="sidebar-state">Ready</strong></div>
         </div>
       </aside>
 
       <section class="workspace">
         <header>
           <div>
-            <p>WINDOWS TECHNICAL PREVIEW</p>
-            <h1>Optimize your session</h1>
+            <p id="section-kicker">ONE-CLICK SESSION CONTROL</p>
+            <h1 id="section-title">Optimize your session</h1>
           </div>
-          <div class="title-controls">
-            <button id="minimize" aria-label="Minimize">—</button>
-            <button id="close" aria-label="Close">×</button>
+          <div class="header-actions">
+            <span class="preview-badge">TECHNICAL PREVIEW</span>
+            <div class="title-controls">
+              <button id="minimize" aria-label="Minimize">-</button>
+              <button id="close" aria-label="Close">&times;</button>
+            </div>
           </div>
         </header>
 
-        <div class="metric-grid">
-          <article><small>NETWORK RESPONSE</small><strong id="metric-latency">—<i> ms</i></strong><span id="latency-status">Not measured</span></article>
-          <article><small>JITTER</small><strong id="metric-jitter">—<i> ms</i></strong><span id="jitter-status">Not measured</span></article>
-          <article><small>FAILED PROBES</small><strong id="metric-loss">—<i>%</i></strong><span id="loss-status">Not measured</span></article>
-          <article class="metric-ready"><small>ROLLBACK</small><strong>READY</strong><span>Temporary changes only</span></article>
-        </div>
+        <section class="view active" data-view-panel="home">
+          <div class="metric-grid">
+            <article><small>NETWORK RESPONSE</small><strong id="metric-latency">-<i> ms</i></strong><span id="latency-status">Not measured</span></article>
+            <article><small>JITTER</small><strong id="metric-jitter">-<i> ms</i></strong><span id="jitter-status">Not measured</span></article>
+            <article><small>FAILED PROBES</small><strong id="metric-loss">-<i>%</i></strong><span id="loss-status">Not measured</span></article>
+            <article class="metric-ready"><small>ROLLBACK</small><strong>READY</strong><span>Temporary changes only</span></article>
+          </div>
 
-        <div class="main-grid">
-          <article class="game-card">
-            <div class="game-ambient"></div>
-            <div class="game-topline"><span>GAME DETECTION</span><b id="detection-state">SCANNING</b></div>
-            <div class="game-identity">
-              <span class="game-icon">A</span>
-              <div>
-                <small id="game-label">SELECTED GAME</small>
-                <h2 id="game-name">Arena Strike</h2>
+          <div class="main-grid">
+            <article class="game-card">
+              <div class="game-ambient"></div>
+              <div class="game-topline"><span>GAME DETECTION</span><b id="detection-state">SCANNING</b></div>
+              <div class="game-identity">
+                <span class="game-icon">A</span>
+                <div>
+                  <small id="game-label">SELECTED GAME</small>
+                  <h2 id="game-name">Other game</h2>
+                </div>
               </div>
-            </div>
 
-            <div class="game-controls">
-              <label>
-                <span>Game</span>
-                <select id="game-select">
-                  <option>Arena Strike</option>
-                  <option>Fortnite</option>
-                  <option>VALORANT</option>
-                  <option>Counter-Strike 2</option>
-                  <option>League of Legends</option>
-                  <option>Apex Legends</option>
-                  <option>Rocket League</option>
-                  <option>Roblox</option>
-                  <option>Other game</option>
-                </select>
+              <div class="game-controls">
+                <label>
+                  <span>Game</span>
+                  <select id="game-select">
+                    <option>Other game</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Optimization mode</span>
+                  <select id="mode-select">
+                    <option>Automatic</option>
+                    <option>Lowest latency</option>
+                    <option>Maximum stability</option>
+                    <option>Quick check</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="route-line">
+                <div><small>Current path</small><strong id="current-path">Direct connection</strong></div>
+                <span>&rarr;</span>
+                <div><small>Recommended</small><strong id="best-path">Run diagnosis</strong></div>
+              </div>
+
+              <div class="session-pipeline">
+                <div class="pipeline-head">
+                  <span>ONE-CLICK PIPELINE</span>
+                  <b id="pipeline-mode">AUTOMATIC</b>
+                </div>
+                <div class="pipeline-grid">
+                  <div>
+                    <i>1</i>
+                    <span><strong>Game context</strong><small id="pipeline-game">Manual selection</small></span>
+                    <b id="pipeline-game-state">READY</b>
+                  </div>
+                  <div>
+                    <i>2</i>
+                    <span><strong>Connection evidence</strong><small id="pipeline-network">Three public edges</small></span>
+                    <b id="pipeline-network-state">WAITING</b>
+                  </div>
+                  <div>
+                    <i>3</i>
+                    <span><strong>PC session profile</strong><small id="pipeline-profile">Only with a running game</small></span>
+                    <b id="pipeline-profile-state">OPTIONAL</b>
+                  </div>
+                </div>
+              </div>
+
+              <button id="optimize" class="optimize-button">
+                <span class="button-icon">&#9889;</span>
+                <span id="optimize-label">DIAGNOSE &amp; OPTIMIZE</span>
+                <i>&rsaquo;&rsaquo;</i>
+              </button>
+              <p class="honesty-note">Relay routing is locked in this preview. Diagnostics and reversible PC tuning are live.</p>
+            </article>
+
+            <article class="evidence-card">
+              <div class="panel-head">
+                <div><small>LIVE EVIDENCE</small><h3>What we can improve</h3></div>
+                <span id="evidence-badge">WAITING</span>
+              </div>
+              <div class="evidence-list">
+                <div class="evidence-item"><span class="evidence-icon">R</span><div><strong>Edge response</strong><small id="route-detail">Measure independent public test edges</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon">J</span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon">L</span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
+                <div class="evidence-item"><span class="evidence-icon">B</span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
+              </div>
+              <div class="safe-card">
+                <span>&check;</span>
+                <div><strong>Safe by default</strong><small>Visible changes &middot; Crash-safe rollback journal</small></div>
+              </div>
+              <p class="preview-warning"><b>PREVIEW MODE</b> Diagnostics and local performance profiles are real. Production relay routing is not active.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="games">
+          <div class="view-toolbar">
+            <div><small>AUTOMATIC PROFILE MATCHING</small><strong>Detected and supported games</strong></div>
+            <button id="scan-games" class="secondary-button">Scan running games</button>
+          </div>
+          <div id="games-grid" class="games-grid"></div>
+        </section>
+
+        <section class="view" data-view-panel="network">
+          <div class="feature-layout">
+            <article class="feature-panel feature-panel-large">
+              <div class="panel-head">
+                <div><small>REAL CONNECTION TEST</small><h3>Diagnostic edges</h3></div>
+                <button id="run-network-test" class="secondary-button">Run 3-edge test</button>
+              </div>
+              <p class="panel-copy">Measure repeated TCP response, variation, and failed attempts against three independent internet edges.</p>
+              <div id="edge-results" class="edge-results">
+                <div><span>Cloudflare edge</span><strong>-</strong><small>Waiting</small></div>
+                <div><span>Google edge</span><strong>-</strong><small>Waiting</small></div>
+                <div><span>Quad9 edge</span><strong>-</strong><small>Waiting</small></div>
+              </div>
+            </article>
+            <article class="feature-panel">
+              <small>ROUTING NETWORK</small>
+              <h3>Relay regions</h3>
+              <div class="region-list">
+                <button disabled><span>Frankfurt</span><b>Planned</b></button>
+                <button disabled><span>Amsterdam</span><b>Planned</b></button>
+                <button disabled><span>London</span><b>Planned</b></button>
+              </div>
+              <p class="preview-warning">Region controls unlock after real relay servers pass route-quality testing.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="performance">
+          <div class="feature-layout">
+            <article class="feature-panel feature-panel-large">
+              <small>REVERSIBLE SESSION PROFILE</small>
+              <h3>PC performance</h3>
+              <p class="panel-copy">Apply conservative Windows changes only while you play. Restore them with one click or when Ping Optimizer closes.</p>
+              <label class="option-row">
+                <span><strong>High Performance power plan</strong><small>Temporarily prioritizes performance over energy saving.</small></span>
+                <input id="perf-power" type="checkbox" checked />
               </label>
-              <label>
-                <span>Optimization mode</span>
-                <select id="mode-select">
-                  <option>Automatic</option>
-                  <option>Lowest latency</option>
-                  <option>Maximum stability</option>
-                  <option>Data saver</option>
-                </select>
+              <label class="option-row">
+                <span><strong>Game process priority</strong><small>Raises the detected game to Windows High priority when permission allows.</small></span>
+                <input id="perf-priority" type="checkbox" checked />
               </label>
-            </div>
+              <div class="action-row">
+                <button id="apply-performance" class="primary-action">Apply session profile</button>
+                <button id="restore-performance" class="secondary-button">Restore defaults</button>
+              </div>
+              <div id="performance-result" class="result-box">No performance changes are active.</div>
+            </article>
+            <article class="feature-panel evidence-panel">
+              <small>WHY THESE TWO?</small>
+              <h3>Measured, not mythical</h3>
+              <p>We exclude random registry packs, security-disabling scripts, universal timer tweaks, and fake RAM-cleaning claims.</p>
+              <ul>
+                <li>Session-scoped changes</li>
+                <li>Visible before applying</li>
+                <li>Automatic restoration</li>
+              </ul>
+            </article>
+          </div>
+        </section>
 
-            <div class="route-line">
-              <div><small>Current path</small><strong id="current-path">Direct connection</strong></div>
-              <span>→</span>
-              <div><small>Recommended</small><strong id="best-path">Run diagnosis</strong></div>
-            </div>
+        <section class="view" data-view-panel="tools">
+          <div class="feature-layout">
+            <article class="feature-panel feature-panel-large">
+              <div class="panel-head">
+                <div><small>SAFE NETWORK REPAIR</small><h3>Connection health check</h3></div>
+                <button id="run-repair" class="primary-action">Run safe repair</button>
+              </div>
+              <p class="panel-copy">Checks DNS resolution, refreshes the Windows DNS cache, and reports active adapter status without resetting Winsock or requiring a restart.</p>
+              <div id="repair-results" class="repair-results">
+                <div><i></i><span><strong>DNS resolution</strong><small>Not checked</small></span></div>
+                <div><i></i><span><strong>DNS cache</strong><small>Not checked</small></span></div>
+                <div><i></i><span><strong>Active adapters</strong><small>Not checked</small></span></div>
+              </div>
+            </article>
+            <article class="feature-panel">
+              <small>PROTECTED ACTIONS</small>
+              <h3>Nothing destructive</h3>
+              <p class="panel-copy">This preview will not reset your network stack, remove adapters, disable security, or change the registry.</p>
+              <div class="safe-card"><span>&check;</span><div><strong>Recovery-first</strong><small>Low-risk checks only</small></div></div>
+            </article>
+          </div>
+        </section>
 
-            <button id="optimize" class="optimize-button">
-              <span class="button-icon">ϟ</span>
-              <span id="optimize-label">DIAGNOSE & OPTIMIZE</span>
-              <i>››</i>
-            </button>
-            <p class="honesty-note">No relay will be applied unless it measures better than your direct route.</p>
-          </article>
+        <section class="view" data-view-panel="history">
+          <div class="view-toolbar">
+            <div><small>LOCAL SESSION RECORDS</small><strong>Your diagnostic history</strong></div>
+            <span class="local-only">Stored on this PC</span>
+          </div>
+          <div id="history-list" class="history-list">
+            <div class="empty-state"><strong>No sessions yet</strong><span>Run a connection diagnosis to create your first report.</span></div>
+          </div>
+        </section>
 
-          <article class="evidence-card">
-            <div class="panel-head">
-              <div><small>LIVE EVIDENCE</small><h3>What we can improve</h3></div>
-              <span id="evidence-badge">WAITING</span>
-            </div>
-            <div class="evidence-list">
-              <div class="evidence-item"><span class="evidence-icon">↝</span><div><strong>Route latency</strong><small id="route-detail">Compare direct and relay paths</small><i><b></b></i></div></div>
-              <div class="evidence-item"><span class="evidence-icon">⌁</span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
-              <div class="evidence-item"><span class="evidence-icon">◇</span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
-              <div class="evidence-item"><span class="evidence-icon">▱</span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
-            </div>
-            <div class="safe-card">
-              <span>✓</span>
-              <div><strong>Safe by default</strong><small>Visible changes · Automatic rollback</small></div>
-            </div>
-            <p class="preview-warning"><b>PREVIEW MODE</b> Diagnostics are real. Production game routing is not active in this build.</p>
-          </article>
-        </div>
+        <section class="view" data-view-panel="settings">
+          <div class="feature-layout">
+            <article class="feature-panel feature-panel-large">
+              <small>APPLICATION BEHAVIOR</small>
+              <h3>Preferences</h3>
+              <label class="option-row"><span><strong>Auto-detect games</strong><small>Scan running processes for supported game profiles.</small></span><input id="setting-auto-detect" type="checkbox" checked /></label>
+              <label class="option-row"><span><strong>Diagnose on launch</strong><small>Run connection measurements automatically when the app opens.</small></span><input id="setting-diagnose" type="checkbox" /></label>
+              <label class="option-row"><span><strong>Minimize to tray</strong><small>Prepared for a future background-service build.</small></span><input id="setting-tray" type="checkbox" disabled /></label>
+              <label class="select-row"><span><strong>Preferred optimization mode</strong><small>Changes diagnostic depth and recommendation scoring.</small></span><select id="setting-mode"><option>Automatic</option><option>Lowest latency</option><option>Maximum stability</option><option>Quick check</option></select></label>
+              <button id="save-settings" class="primary-action">Save preferences</button>
+            </article>
+            <article class="feature-panel">
+              <small>BUILD INFORMATION</small>
+              <h3>Ping Optimizer 0.2</h3>
+              <p class="panel-copy">Windows technical preview with working game detection, edge diagnostics, session profiles, repair checks, local settings, and history.</p>
+            </article>
+          </div>
+        </section>
       </section>
     </div>
 

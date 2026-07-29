@@ -34,9 +34,11 @@ test("renders the finished Ping Optimizer launch page", async () => {
 
   const html = await response.text();
   assert.match(html, /Ping Optimizer — Better routes, proven/i);
-  assert.match(html, /One button\./i);
-  assert.match(html, /A measurably better route\./i);
-  assert.match(html, /Download Windows preview/i);
+  assert.match(html, /Lower ping\./i);
+  assert.match(html, /Prove the difference\./i);
+  assert.match(html, /LIVE ROUTE TEST/i);
+  assert.match(html, /Not a magic button\. A transparent one\./i);
+  assert.match(html, /Download interface preview/i);
   assert.match(html, /ping-optimizer-windows-preview\.zip/i);
   assert.match(html, /Technical preview/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
