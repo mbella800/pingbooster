@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:" />
+    <title>Ping Optimizer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside>
+        <div class="brand">
+          <span class="brand-mark"><i></i></span>
+          <span>PING <b>OPTIMIZER</b></span>
+        </div>
+        <nav>
+          <button class="nav-item active"><span>⌂</span>Home</button>
+          <button class="nav-item"><span>◇</span>Games</button>
+          <button class="nav-item"><span>◎</span>Network</button>
+          <button class="nav-item"><span>▥</span>Performance</button>
+          <button class="nav-item"><span>↶</span>History</button>
+          <button class="nav-item"><span>⚙</span>Settings</button>
+        </nav>
+        <div class="sidebar-status">
+          <i></i>
+          <div><small>Preview status</small><strong>Ready</strong></div>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header>
+          <div>
+            <p>WINDOWS TECHNICAL PREVIEW</p>
+            <h1>Optimize your session</h1>
+          </div>
+          <div class="title-controls">
+            <button id="minimize" aria-label="Minimize">—</button>
+            <button id="close" aria-label="Close">×</button>
+          </div>
+        </header>
+
+        <div class="metric-grid">
+          <article><small>NETWORK RESPONSE</small><strong id="metric-latency">—<i> ms</i></strong><span id="latency-status">Not measured</span></article>
+          <article><small>JITTER</small><strong id="metric-jitter">—<i> ms</i></strong><span id="jitter-status">Not measured</span></article>
+          <article><small>FAILED PROBES</small><strong id="metric-loss">—<i>%</i></strong><span id="loss-status">Not measured</span></article>
+          <article class="metric-ready"><small>ROLLBACK</small><strong>READY</strong><span>Temporary changes only</span></article>
+        </div>
+
+        <div class="main-grid">
+          <article class="game-card">
+            <div class="game-ambient"></div>
+            <div class="game-topline"><span>GAME DETECTION</span><b id="detection-state">SCANNING</b></div>
+            <div class="game-identity">
+              <span class="game-icon">A</span>
+              <div>
+                <small id="game-label">SELECTED GAME</small>
+                <h2 id="game-name">Arena Strike</h2>
+              </div>
+            </div>
+
+            <div class="game-controls">
+              <label>
+                <span>Game</span>
+                <select id="game-select">
+                  <option>Arena Strike</option>
+                  <option>Fortnite</option>
+                  <option>VALORANT</option>
+                  <option>Counter-Strike 2</option>
+                  <option>League of Legends</option>
+                  <option>Apex Legends</option>
+                  <option>Rocket League</option>
+                  <option>Roblox</option>
+                  <option>Other game</option>
+                </select>
+              </label>
+              <label>
+                <span>Optimization mode</span>
+                <select id="mode-select">
+                  <option>Automatic</option>
+                  <option>Lowest latency</option>
+                  <option>Maximum stability</option>
+                  <option>Data saver</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="route-line">
+              <div><small>Current path</small><strong id="current-path">Direct connection</strong></div>
+              <span>→</span>
+              <div><small>Recommended</small><strong id="best-path">Run diagnosis</strong></div>
+            </div>
+
+            <button id="optimize" class="optimize-button">
+              <span class="button-icon">ϟ</span>
+              <span id="optimize-label">DIAGNOSE & OPTIMIZE</span>
+              <i>››</i>
+            </button>
+            <p class="honesty-note">No relay will be applied unless it measures better than your direct route.</p>
+          </article>
+
+          <article class="evidence-card">
+            <div class="panel-head">
+              <div><small>LIVE EVIDENCE</small><h3>What we can improve</h3></div>
+              <span id="evidence-badge">WAITING</span>
+            </div>
+            <div class="evidence-list">
+              <div class="evidence-item"><span class="evidence-icon">↝</span><div><strong>Route latency</strong><small id="route-detail">Compare direct and relay paths</small><i><b></b></i></div></div>
+              <div class="evidence-item"><span class="evidence-icon">⌁</span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
+              <div class="evidence-item"><span class="evidence-icon">◇</span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
+              <div class="evidence-item"><span class="evidence-icon">▱</span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
+            </div>
+            <div class="safe-card">
+              <span>✓</span>
+              <div><strong>Safe by default</strong><small>Visible changes · Automatic rollback</small></div>
+            </div>
+            <p class="preview-warning"><b>PREVIEW MODE</b> Diagnostics are real. Production game routing is not active in this build.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="renderer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "ping-optimizer-preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ping Optimizer Windows technical preview",
+  "main": "main.cjs",
+  "author": "Ping Optimizer",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@electron/packager": "19.0.2",
+    "electron": "39.2.7"
+  }
+}
