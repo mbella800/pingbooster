@@ -11,6 +11,7 @@ adjust it to your machine).
 |---|---|
 | `screenshot-site.mjs <url> <outdir> [w] [h]` | Screenshots the site at every settled scroll position, desktop and mobile viewports, and reports any `[data-reveal]` element that is invisible **while on screen** (the only correct measure for scroll reveals) plus horizontal overflow. |
 | `screenshot-app.mjs <out.png> [view]` | Renders `desktop/index.html` in a plain browser with the Electron preload API shimmed, switches to the given view (`home`, `games`, …) and screenshots it. Rendering-only; none of the shimmed behaviour ships. |
+| `snapshot-site.mjs [out.html]` | Builds a fully self-contained HTML snapshot of the running site (CSSOM serialized, fonts and images inlined as data URIs, Next JS replaced by a small vanilla script for the reveals and live console). Used to publish shareable previews when no deploy exists yet. Dev-server gotcha it works around: fetching a stylesheet URL out-of-band returns Vite's JS module wrapper, so it reads `document.styleSheets` instead. |
 
 Two lessons encoded in these scripts, learned the hard way:
 
