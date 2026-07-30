@@ -107,7 +107,7 @@ ${css}
     radial-gradient(circle at 50% -20%, rgba(21, 86, 109, 0.28), transparent 34rem),
     #050b14;
   color: #f4f8ff;
-  font-family: var(--font-geist-sans, Arial), Arial, sans-serif;
+  font-family: var(--font-body, Arial), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 .pb-preview-note {
@@ -117,7 +117,7 @@ ${css}
   z-index: 99;
   padding: 8px 14px;
   text-align: center;
-  font: 500 11px/1.4 var(--font-geist-mono, monospace), monospace;
+  font: 500 11px/1.4 var(--font-mono, monospace), monospace;
   letter-spacing: .06em;
   color: #94a4bb;
   background: rgba(5, 11, 20, .92);

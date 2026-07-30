@@ -52,6 +52,23 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Attach custom domain
+        # Set a repository VARIABLE (Settings → Secrets and variables → Actions →
+        # Variables tab, not a secret) named SITE_DOMAIN, e.g. example.com.
+        # The deploy then serves the site on the apex and www of that domain —
+        # Cloudflare creates the DNS records and certificate automatically,
+        # since the domain's zone lives in the same account. Without the
+        # variable, the site is only on the workers.dev URL.
+        if: env.HAS_CF_SECRETS == 'true' && vars.SITE_DOMAIN != ''
+        env:
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
+        run: |
+          jq --arg d "$SITE_DOMAIN" \
+            '.routes = [{pattern: $d, custom_domain: true}, {pattern: ("www." + $d), custom_domain: true}]' \
+            dist/server/wrangler.json > wrangler.patched.json
+          mv wrangler.patched.json dist/server/wrangler.json
+          echo "Deploying to https://$SITE_DOMAIN and https://www.$SITE_DOMAIN"
+
       - name: Deploy to Cloudflare Workers
         if: env.HAS_CF_SECRETS == 'true'
         env:

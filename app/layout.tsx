@@ -1,16 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Type system: Chakra Petch carries the headlines — angular and technical, it
+// reads "gaming hardware" without falling into the Rajdhani esports cliché.
+// IBM Plex Sans/Mono do the quiet work: body copy, labels, and the numeric
+// readouts (Plex Mono keeps digits steady where values tick live). Geist was
+// the template default and reads generic-startup; these are chosen for the
+// subject. Latin subset now; Plex's wide language coverage is deliberate for
+// the locale roadmap in docs/architecture/07-internationalisation.md.
+const display = Chakra_Petch({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const body = IBM_Plex_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const mono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -45,7 +60,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${display.variable} ${body.variable} ${mono.variable}`}>
         {children}
       </body>
     </html>

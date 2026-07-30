@@ -15,7 +15,6 @@ const sectionKicker = document.querySelector("#section-kicker");
 
 let detectedGame = null;
 let supportedGames = [];
-let lastReport = null;
 let diagnosticRunning = false;
 
 const viewLabels = {
@@ -195,7 +194,6 @@ function renderEdgeResults(results = []) {
 
 function applyReport(report) {
   if (!report?.best) throw new Error("No reachable measurement target");
-  lastReport = report;
   const failureRate = report.best.failureRate ?? report.best.loss ?? 0;
   setMetric("latency", report.best.latency, report.best.name);
   setMetric("jitter", report.best.jitter, report.best.jitter <= 8 ? "Stable" : "Variable");
@@ -215,16 +213,16 @@ function applyReport(report) {
   renderEdgeResults(report.results);
 }
 
-async function runDiagnostics({ oneClick = false, button = null } = {}) {
+async function runDiagnostics({ oneClick = false } = {}) {
   if (diagnosticRunning) {
     showToast("A connection test is already running.");
     return null;
   }
   diagnosticRunning = true;
   const networkButton = document.querySelector("#run-network-test");
-  setBusy(networkButton, true, "Testing 3 edges...");
+  setBusy(networkButton, true, "Testing 3 edges…");
   optimizeButton.disabled = true;
-  if (oneClick) optimizeLabel.textContent = "MEASURING CONNECTION";
+  if (oneClick) optimizeLabel.textContent = "Measuring connection…";
   badge.textContent = "TESTING";
   badge.classList.remove("good");
   sidebarState.textContent = "Measuring";
@@ -247,18 +245,18 @@ async function runDiagnostics({ oneClick = false, button = null } = {}) {
       const profile = await api.applyPerformance({ powerPlan: true, processPriority: true });
       if (profile.applied.length) {
         performanceMessage = ` ${profile.applied.join(" and ")} applied for this session.`;
-        optimizeLabel.textContent = "SESSION PROFILE ACTIVE";
+        optimizeLabel.textContent = "Session profile active";
         sidebarState.textContent = "Optimized";
         document.querySelector("#pipeline-profile").textContent = profile.applied.join(" + ");
         document.querySelector("#pipeline-profile-state").textContent = "ACTIVE";
         document.querySelector("#pipeline-profile-state").classList.add("done");
       } else {
-        optimizeLabel.textContent = "DIAGNOSIS COMPLETE";
+        optimizeLabel.textContent = "Diagnosis complete";
         sidebarState.textContent = "Measured";
         document.querySelector("#pipeline-profile-state").textContent = "NOT APPLIED";
       }
     } else if (oneClick) {
-      optimizeLabel.textContent = "DIAGNOSIS COMPLETE";
+      optimizeLabel.textContent = "Diagnosis complete";
       sidebarState.textContent = "Measured";
       document.querySelector("#pipeline-profile-state").textContent =
         modeSelect.value === "Quick check" ? "SKIPPED" : "NO GAME";
@@ -270,7 +268,7 @@ async function runDiagnostics({ oneClick = false, button = null } = {}) {
     await refreshHistory();
     return report;
   } catch {
-    if (oneClick) optimizeLabel.textContent = "TRY DIAGNOSIS AGAIN";
+    if (oneClick) optimizeLabel.textContent = "Try diagnosis again";
     badge.textContent = "UNAVAILABLE";
     sidebarState.textContent = "Ready";
     document.querySelector("#pipeline-network-state").textContent = "FAILED";
@@ -415,9 +413,7 @@ gameSelect.addEventListener("change", () => {
 modeSelect.addEventListener("change", updateModeDisplay);
 optimizeButton.addEventListener("click", () => runDiagnostics({ oneClick: true }));
 document.querySelector("#scan-games").addEventListener("click", () => scanGame({ notify: true }));
-document.querySelector("#run-network-test").addEventListener("click", (event) =>
-  runDiagnostics({ button: event.currentTarget }),
-);
+document.querySelector("#run-network-test").addEventListener("click", () => runDiagnostics());
 document.querySelector("#apply-performance").addEventListener("click", applyPerformance);
 document.querySelector("#restore-performance").addEventListener("click", restorePerformance);
 document.querySelector("#run-repair").addEventListener("click", runRepair);
