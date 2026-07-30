@@ -1,11 +1,14 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const { execFile, execFileSync } = require("node:child_process");
 const dns = require("node:dns").promises;
 const fs = require("node:fs");
 const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
+const { EasyLobbyFoundation } = require("./easy-lobby-foundation.cjs");
+const { FpsBoostFoundation } = require("./performance-foundation.cjs");
 const { SessionMonitor } = require("./session-monitor.cjs");
+const { readWindowsGpuUtilization } = require("./system-telemetry.cjs");
 
 const knownGames = [
   ["FortniteClient-Win64-Shipping.exe", "Fortnite", "Competitive"],
@@ -157,6 +160,7 @@ function createWindow() {
     frame: false,
     backgroundColor: "#050b14",
     title: "Ping Optimizer",
+    icon: path.join(__dirname, "assets", "branding", "app-icon.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
@@ -301,6 +305,36 @@ function activePowerPlan() {
     return output.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i)?.[0] ?? null;
   } catch {
     return null;
+  }
+}
+
+function powerPlanInfo() {
+  const currentGuid = activePowerPlan();
+  try {
+    const output = execFileSync("powercfg.exe", ["/L"], {
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    const activeLine = output
+      .split(/\r?\n/)
+      .find((line) => line.includes("*") && /[a-f0-9-]{36}/i.test(line));
+    return {
+      currentGuid,
+      currentName: activeLine?.match(/\(([^)]+)\)/)?.[1] ?? null,
+      highPerformanceGuid: HIGH_PERFORMANCE_GUID,
+      highPerformanceAvailable: output.toLowerCase().includes(HIGH_PERFORMANCE_GUID),
+      highPerformanceActive:
+        currentGuid?.toLowerCase() === HIGH_PERFORMANCE_GUID,
+    };
+  } catch {
+    return {
+      currentGuid,
+      currentName: null,
+      highPerformanceGuid: HIGH_PERFORMANCE_GUID,
+      highPerformanceAvailable: false,
+      highPerformanceActive:
+        currentGuid?.toLowerCase() === HIGH_PERFORMANCE_GUID,
+    };
   }
 }
 
@@ -476,6 +510,25 @@ async function runSafeRepair() {
   return { checks, testedAt: new Date().toISOString() };
 }
 
+const fpsBoostFoundation = new FpsBoostFoundation({
+  detectRunningGame,
+  getPowerInfo: powerPlanInfo,
+  applyProfile: applyPerformanceProfile,
+  restoreProfile: restorePerformanceProfile,
+  getSessionState: () => ({
+    active: sessionState.active,
+    gameName: sessionState.gameName,
+  }),
+  emit: broadcast,
+  getGpuUtilization: () => readWindowsGpuUtilization(exec),
+});
+
+const easyLobbyFoundation = new EasyLobbyFoundation({
+  probe: tcpProbe,
+  detectRunningGame,
+  emit: broadcast,
+});
+
 const gameSessionMonitor = new SessionMonitor({
   detectRunningGame,
   isPidRunning,
@@ -492,12 +545,27 @@ if (!hasSingleInstanceLock) {
     knownGames.map(([process, name, recommendedMode]) => ({ process, name, recommendedMode })),
   );
   ipcMain.handle("network:diagnose", (_event, request) => runDiagnostics(request));
-  ipcMain.handle("performance:apply", (_event, options) => applyPerformanceProfile(options));
-  ipcMain.handle("performance:restore", restorePerformanceProfile);
+  ipcMain.handle("performance:apply", (_event, options) => fpsBoostFoundation.apply(options));
+  ipcMain.handle("performance:restore", () => fpsBoostFoundation.rollback());
   ipcMain.handle("performance:state", () => ({
     active: sessionState.active,
     gameName: sessionState.gameName,
   }));
+  ipcMain.handle("fps:scan", () => fpsBoostFoundation.scan());
+  ipcMain.handle("fps:benchmark", (_event, options) =>
+    fpsBoostFoundation.benchmark(options),
+  );
+  ipcMain.handle("fps:apply", (_event, options) => fpsBoostFoundation.apply(options));
+  ipcMain.handle("fps:rollback", () => fpsBoostFoundation.rollback());
+  ipcMain.handle("fps:state", () => fpsBoostFoundation.state());
+  ipcMain.handle("system:telemetry", (_event, options) =>
+    fpsBoostFoundation.telemetry(options),
+  );
+  ipcMain.handle("easy-lobby:compare", (_event, options) =>
+    easyLobbyFoundation.compare(options),
+  );
+  ipcMain.handle("easy-lobby:regions", () => easyLobbyFoundation.regions());
+  ipcMain.handle("easy-lobby:state", () => easyLobbyFoundation.state());
   ipcMain.handle("tools:repair", runSafeRepair);
   ipcMain.handle("history:list", () => readJson("history.json", []));
   ipcMain.handle("settings:get", () =>
@@ -511,6 +579,21 @@ if (!hasSingleInstanceLock) {
   ipcMain.handle("settings:save", (_event, settings) => {
     writeJson("settings.json", settings);
     return settings;
+  });
+  ipcMain.handle("app:open-external", async (_event, target) => {
+    try {
+      const url = new URL(String(target));
+      const allowed =
+        url.protocol === "https:" &&
+        (url.hostname === "pingoptimizer.com" ||
+          url.hostname === "www.pingoptimizer.com" ||
+          (url.hostname === "github.com" && url.pathname.startsWith("/mbella800/pingbooster/")));
+      if (!allowed) return false;
+      await shell.openExternal(url.toString());
+      return true;
+    } catch {
+      return false;
+    }
   });
   ipcMain.on("window:minimize", (event) => BrowserWindow.fromWebContents(event.sender)?.minimize());
   ipcMain.on("window:close", (event) => BrowserWindow.fromWebContents(event.sender)?.close());

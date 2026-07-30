@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { MotionRuntime } from "./MotionRuntime";
-import { GameGrid, GameRail } from "./GameTiles";
+import { GameArtworkGrid, GameArtworkRail } from "./GameArtwork";
 import { LiveConsole } from "./LiveConsole";
 
 const steps = [
@@ -207,7 +207,7 @@ export default function Home() {
       {/* Replaced a scrolling list of game names in plain text. Players scan for
           the game they play, and a text list gives them nothing to lock onto —
           it also repeated titles and listed "EVERY GAME" as though it were one. */}
-      <GameRail />
+      <GameArtworkRail />
 
       <section className="section product-showcase" aria-label="Desktop app preview">
         <div className="showcase-copy" data-reveal>
@@ -351,7 +351,7 @@ export default function Home() {
         {/* The four mode cards explain the categories; this shows the actual
             titles, which is what a player is looking for when they land here. */}
         <div data-reveal>
-          <GameGrid />
+          <GameArtworkGrid />
         </div>
       </section>
 

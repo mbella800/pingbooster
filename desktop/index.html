@@ -3,265 +3,436 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:"
+    />
     <title>Ping Optimizer</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="shell">
-      <aside>
-        <div class="brand">
-          <span class="brand-mark"><i></i></span>
-          <span>PING <b>OPTIMIZER</b></span>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand" aria-label="Ping Optimizer">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40">
+              <path d="M7 12.5h12.5L25 7h8l-8.8 9.2H13.8L7 23Z" />
+              <path d="M33 27.5H20.5L15 33H7l8.8-9.2h10.4L33 17Z" />
+              <circle cx="20" cy="20" r="2.8" />
+            </svg>
+          </span>
+          <span class="brand-copy"><strong>PING</strong><small>OPTIMIZER</small></span>
         </div>
-        <nav>
-          <button class="nav-item active" data-view="home"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.2 12 4l9 7.2M5.5 9.7V20h13V9.7M9.8 20v-5.6h4.4V20"/></svg></span>Home</button>
-          <button class="nav-item" data-view="games"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 12h4M9 10v4M15.5 11.2h.01M17.8 13.2h.01M6.4 7.5h11.2A3.4 3.4 0 0 1 21 11v2a3.4 3.4 0 0 1-3.4 3.4H6.4A3.4 3.4 0 0 1 3 13v-2a3.4 3.4 0 0 1 3.4-3.5Z"/></svg></span>Games</button>
-          <button class="nav-item" data-view="network"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg></span>Network</button>
-          <button class="nav-item" data-view="performance"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M9.3 20V5M14.7 20v-8M20 20V8"/></svg></span>Performance</button>
-          <button class="nav-item" data-view="tools"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 6.2a3.9 3.9 0 0 1 5.3 5.3l-8.4 8.4-5.3-5.3 8.4-8.4ZM4 20l2-2M9.4 8.7 4.5 3.8M3.8 9.4 8.7 4.5"/></svg></span>Repair tools</button>
-          <button class="nav-item" data-view="history"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.2 12a8.8 8.8 0 1 0 2.6-6.2M3.2 4.5V9h4.5M12 7.8V12l3.2 1.9"/></svg></span>History</button>
-          <button class="nav-item" data-view="settings"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2ZM19.2 14.3a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-2.87 1.2v.17a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-2.93-1.16l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 3.7 14.3H3.5a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.75 7.3l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.5 3.3V3.2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 2.87 1.2l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.55 1.03h.17a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.02Z"/></svg></span>Settings</button>
+
+        <nav class="primary-nav" aria-label="Primary">
+          <button class="nav-item active" data-view="home" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5M9 20v-6h6v6"/></svg>
+            </span>
+            <span>Home</span>
+          </button>
+          <button class="nav-item" data-view="easy-lobby" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM12 7v5l3.5 2M4 12h2M18 12h2M12 4v2"/></svg>
+            </span>
+            <span>Easy Lobby</span>
+          </button>
+          <button class="nav-item" data-view="fps" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 16a8 8 0 1 1 16 0M12 12l4-4M7 18h10M12 4v2M5.6 7.6 7 9M18.4 7.6 17 9"/></svg>
+            </span>
+            <span>Boost FPS</span>
+          </button>
+          <button class="nav-item" data-view="network" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.3 10.9 7.4-3.8M8.3 13.1l7.4 3.8"/></svg>
+            </span>
+            <span>Network</span>
+          </button>
+          <button class="nav-item" data-view="tools" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.5 6.2a4 4 0 0 1 5.3 5.3l-8.4 8.4-5.3-5.3 8.4-8.4ZM4 20l2-2M9 9 4 4M4 9l5-5"/></svg>
+            </span>
+            <span>Repair Tools</span>
+          </button>
+          <button class="nav-item" data-view="history" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5M12 7v5l3 2"/></svg>
+            </span>
+            <span>History</span>
+          </button>
         </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <nav class="secondary-nav" aria-label="Account and support">
+          <button class="nav-item" data-view="support" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 15v-3a7 7 0 0 1 14 0v3M5 14H3v4h4v-4H5ZM19 14h2v4h-4v-4h2ZM17 19c-1 1.3-3 2-5 2"/></svg>
+            </span>
+            <span>Customer Support</span>
+          </button>
+          <button class="nav-item" data-view="settings" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7-.8-1.8.9-1.9L15 4l-1.9.9-1.8-.8L10.5 2h-3l-.7 2.1-1.8.8L3 4 1 6.1 1.9 8l-.8 1.8-2.1.7v3l2.1.7.8 1.8L1 17.9 3 20l2-.9 1.8.8.7 2.1h3l.8-2.1 1.8-.8 1.9.9 2.1-2.1-.9-1.9.8-1.8Z" transform="translate(2 0) scale(.83)"/></svg>
+            </span>
+            <span>Settings</span>
+          </button>
+        </nav>
+
         <div class="sidebar-status">
-          <i></i>
-          <div><small>System status</small><strong id="sidebar-state">Ready</strong></div>
+          <span class="status-orb" aria-hidden="true"></span>
+          <span><small>Optimizer status</small><strong id="sidebar-state">Ready</strong></span>
         </div>
       </aside>
 
       <section class="workspace">
-        <header>
-          <div>
-            <p id="section-kicker">ONE-CLICK SESSION CONTROL</p>
-            <h1 id="section-title">Diagnose your session</h1>
-          </div>
-          <div class="header-actions">
-            <span class="preview-badge">TECHNICAL PREVIEW</span>
-            <div class="title-controls">
-              <button id="minimize" aria-label="Minimize">-</button>
-              <button id="close" aria-label="Close">&times;</button>
-            </div>
+        <header class="topbar">
+          <button class="account-pill" id="account-menu" data-open-view="account" type="button">
+            <span class="avatar" aria-hidden="true">P</span>
+            <span><small>Welcome</small><strong>Guest player</strong></span>
+            <span class="account-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <label class="global-search" for="game-search-input">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+            <input id="game-search-input" type="search" placeholder="Search games and tools" autocomplete="off" />
+            <kbd>CTRL K</kbd>
+          </label>
+
+          <div class="top-actions">
+            <button class="top-link" data-open-view="redeem" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4zM8 7c-1.7 0-3-1-3-2.3S6.2 3 7.5 4.3L12 7M16 7c1.7 0 3-1 3-2.3S17.8 3 16.5 4.3L12 7M12 7v10"/></svg>
+              Redeem code
+            </button>
+            <button class="trial-chip" data-open-view="trial" type="button">Start free trial</button>
+            <button class="icon-button" data-open-view="support" aria-label="Customer support" type="button">
+              <svg viewBox="0 0 24 24"><path d="M5 15v-3a7 7 0 0 1 14 0v3M5 14H3v4h4v-4H5ZM19 14h2v4h-4v-4h2Z"/></svg>
+            </button>
+            <button class="icon-button" data-open-view="settings" aria-label="Settings" type="button">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9 7 7M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
+            </button>
+            <span class="window-divider"></span>
+            <button class="window-button" id="minimize" aria-label="Minimize" type="button">—</button>
+            <button class="window-button close-button" id="close" aria-label="Close" type="button">×</button>
           </div>
         </header>
 
-        <section class="view active" data-view-panel="home">
-          <div class="metric-grid">
-            <article><small>NETWORK RESPONSE</small><strong id="metric-latency"><span class="metric-empty">–</span><i> ms</i></strong><span id="latency-status">Not measured</span></article>
-            <article><small>JITTER</small><strong id="metric-jitter"><span class="metric-empty">–</span><i> ms</i></strong><span id="jitter-status">Not measured</span></article>
-            <article><small>FAILED PROBES</small><strong id="metric-loss"><span class="metric-empty">–</span><i>%</i></strong><span id="loss-status">Not measured</span></article>
-            <article class="metric-ready"><small>ROLLBACK</small><strong>READY</strong><span>Temporary changes only</span></article>
-          </div>
-
-          <div class="main-grid">
-            <article class="game-card">
-              <div class="game-ambient"></div>
-              <div class="game-topline"><span>GAME DETECTION</span><b id="detection-state">SCANNING</b></div>
-              <div class="game-identity">
-                <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/></svg></span>
+        <main class="view-stack">
+          <section class="view active home-view" data-view-panel="home" aria-labelledby="section-title">
+            <div class="home-main">
+              <div class="section-heading">
                 <div>
-                  <small id="game-label">SELECTED GAME</small>
-                  <h2 id="game-name">Other game</h2>
+                  <p id="section-kicker">READY FOR YOUR NEXT SESSION</p>
+                  <h1 id="section-title">Your games</h1>
+                </div>
+                <button class="text-button" id="show-all-games" type="button">View all <span>›</span></button>
+              </div>
+
+              <div class="game-library" id="games-grid" aria-live="polite"></div>
+
+              <div class="quick-section">
+                <div class="section-heading compact">
+                  <div><p>SHORTCUTS</p><h2>Quick actions</h2></div>
+                </div>
+                <div class="quick-grid">
+                  <button class="quick-card trial" data-open-view="trial" type="button">
+                    <span class="quick-icon">7D</span>
+                    <span><strong>Free trial</strong><small>Try every available feature</small></span>
+                    <b>›</b>
+                  </button>
+                  <button class="quick-card redeem" data-open-view="redeem" type="button">
+                    <span class="quick-icon">
+                      <svg viewBox="0 0 24 24"><path d="M4 7h16v10H4zM12 7v10M7 7c-2-2-1-4 1-3l4 3M17 7c2-2 1-4-1-3l-4 3"/></svg>
+                    </span>
+                    <span><strong>Redeem code</strong><small>Activate a beta or plan code</small></span>
+                    <b>›</b>
+                  </button>
+                  <button class="quick-card account" data-open-view="account" type="button">
+                    <span class="quick-icon">
+                      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-5 3.4-7 8-7s7.2 2 8 7"/></svg>
+                    </span>
+                    <span><strong>Login or sign up</strong><small>Sync profiles across PCs</small></span>
+                    <b>›</b>
+                  </button>
+                  <button class="quick-card support" data-open-view="support" type="button">
+                    <span class="quick-icon">
+                      <svg viewBox="0 0 24 24"><path d="M5 15v-3a7 7 0 0 1 14 0v3M5 14H3v4h4v-4H5ZM19 14h2v4h-4v-4h2Z"/></svg>
+                    </span>
+                    <span><strong>Customer support</strong><small>Diagnostics and beta help</small></span>
+                    <b>›</b>
+                  </button>
                 </div>
               </div>
 
-              <div class="game-controls">
-                <label>
-                  <span>Game</span>
-                  <select id="game-select">
-                    <option>Other game</option>
-                  </select>
-                </label>
-                <label>
-                  <span>Optimization mode</span>
-                  <select id="mode-select">
-                    <option>Automatic</option>
-                    <option>Lowest latency</option>
-                    <option>Maximum stability</option>
-                    <option>Quick check</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="route-line">
-                <div><small>Current path</small><strong id="current-path">Direct connection</strong></div>
-                <span>&rarr;</span>
-                <div><small>Recommended</small><strong id="best-path">Run diagnosis</strong></div>
-              </div>
-
-              <div class="session-pipeline">
-                <div class="pipeline-head">
-                  <span>ONE-CLICK PIPELINE</span>
-                  <b id="pipeline-mode">AUTOMATIC</b>
-                </div>
-                <div class="pipeline-grid">
+              <article class="session-banner">
+                <div class="banner-grid" aria-hidden="true"></div>
+                <img id="selected-game-art" class="selected-game-art" alt="" hidden />
+                <div class="banner-copy">
+                  <span class="game-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/></svg>
+                  </span>
                   <div>
-                    <i>1</i>
-                    <span><strong>Game context</strong><small id="pipeline-game">Manual selection</small></span>
-                    <b id="pipeline-game-state">READY</b>
-                  </div>
-                  <div>
-                    <i>2</i>
-                    <span><strong>Connection evidence</strong><small id="pipeline-network">Three public edges</small></span>
-                    <b id="pipeline-network-state">WAITING</b>
-                  </div>
-                  <div>
-                    <i>3</i>
-                    <span><strong>PC session profile</strong><small id="pipeline-profile">Only with a running game</small></span>
-                    <b id="pipeline-profile-state">OPTIONAL</b>
+                    <small id="game-label">SELECTED PROFILE</small>
+                    <h2 id="game-name">Other game</h2>
+                    <p>Measure first. Apply only changes that can be restored.</p>
                   </div>
                 </div>
-              </div>
+                <div class="banner-controls">
+                  <label>
+                    <span>Game</span>
+                    <select id="game-select"><option>Other game</option></select>
+                  </label>
+                  <label>
+                    <span>Mode</span>
+                    <select id="mode-select">
+                      <option>Automatic</option>
+                      <option>Lowest latency</option>
+                      <option>Maximum stability</option>
+                      <option>Quick check</option>
+                    </select>
+                  </label>
+                  <button id="optimize" class="primary-button" type="button">
+                    <span id="optimize-label">Optimize session</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </article>
+            </div>
 
-              <button id="optimize" class="optimize-button">
-                <span id="optimize-label">Diagnose session</span>
-                <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-              </button>
-              <p class="honesty-note">Relay routing is locked in this preview. Diagnostics and reversible PC tuning are live.</p>
-            </article>
+            <aside class="home-rail">
+              <article class="rail-card system-card">
+                <div class="panel-heading">
+                  <div><small>LIVE WINDOWS DATA</small><h2>System</h2></div>
+                  <span id="detection-state" class="state-badge">READY</span>
+                </div>
+                <div class="system-overview">
+                  <div class="system-ring">
+                    <span><strong id="system-score">—</strong><small>LOAD</small></span>
+                  </div>
+                  <div class="system-bars">
+                    <div><span><b>CPU</b><em id="system-cpu">—</em></span><i><b id="system-cpu-bar"></b></i></div>
+                    <div><span><b>GPU</b><em id="system-gpu">—</em></span><i><b id="system-gpu-bar"></b></i></div>
+                    <div><span><b>RAM</b><em id="system-ram">—</em></span><i><b id="system-ram-bar"></b></i></div>
+                  </div>
+                </div>
+                <div class="system-actions">
+                  <button data-open-view="network" type="button"><span>↗</span><strong>Route check</strong><small>Direct</small></button>
+                  <button data-open-view="fps" type="button"><span>⚡</span><strong>FPS Boost</strong><small>Reversible</small></button>
+                  <button data-open-view="easy-lobby" type="button"><span>◎</span><strong>Easy Lobby</strong><small>Regions</small></button>
+                </div>
+              </article>
 
-            <article class="evidence-card">
-              <div class="panel-head">
-                <div><small>LIVE EVIDENCE</small><h3>What we can improve</h3></div>
-                <span id="evidence-badge">WAITING</span>
-              </div>
-              <div class="evidence-list">
-                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM17.5 20.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM6.5 8.5v3a3 3 0 0 0 3 3h5a3 3 0 0 1 3 3v0"/></svg></span><div><strong>Edge response</strong><small id="route-detail">Measure independent public test edges</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 12h3.2l2.1-6.4 3.4 12.8 2.6-8.3 1.9 4.4 1.4-2.5h4.4"/></svg></span><div><strong>Jitter stability</strong><small id="jitter-detail">Measure response variation</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2 4 6.4v5.1c0 4.4 3.3 8.1 8 9.3 4.7-1.2 8-4.9 8-9.3V6.4L12 3.2ZM9.6 11.8l1.9 1.9 3.4-3.4"/></svg></span><div><strong>Connection loss</strong><small id="loss-detail">Check repeated network probes</small><i><b></b></i></div></div>
-                <div class="evidence-item"><span class="evidence-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3ZM3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></span><div><strong>Background traffic</strong><small>Available in the routing alpha</small><i><b></b></i></div></div>
-              </div>
-              <div class="safe-card">
-                <span>&check;</span>
-                <div><strong>Safe by default</strong><small>Visible changes &middot; Crash-safe rollback journal</small></div>
-              </div>
-              <p class="preview-warning"><b>PREVIEW MODE</b> Diagnostics and local performance profiles are real. Production relay routing is not active.</p>
-            </article>
-          </div>
-        </section>
+              <article class="rail-card session-card">
+                <div class="panel-heading">
+                  <div><small>ONE-CLICK PIPELINE</small><h2>Session status</h2></div>
+                  <span id="evidence-badge" class="state-badge">WAITING</span>
+                </div>
+                <div class="session-list">
+                  <div><i>1</i><span><strong>Game context</strong><small id="pipeline-game">Manual selection</small></span><b id="pipeline-game-state">READY</b></div>
+                  <div><i>2</i><span><strong>Connection evidence</strong><small id="pipeline-network">Not measured</small></span><b id="pipeline-network-state">WAITING</b></div>
+                  <div><i>3</i><span><strong>Session profile</strong><small id="pipeline-profile">No change active</small></span><b id="pipeline-profile-state">OPTIONAL</b></div>
+                </div>
+                <div class="mini-route">
+                  <span><small>Current</small><strong id="current-path">Direct connection</strong></span>
+                  <b>→</b>
+                  <span><small>Recommended</small><strong id="best-path">Run diagnosis</strong></span>
+                </div>
+                <span id="pipeline-mode" class="hidden-value">AUTOMATIC</span>
+              </article>
 
-        <section class="view" data-view-panel="games">
-          <div class="view-toolbar">
-            <div><small>AUTOMATIC PROFILE MATCHING</small><strong>Detected and supported games</strong></div>
-            <button id="scan-games" class="secondary-button">Scan running games</button>
-          </div>
-          <div id="games-grid" class="games-grid"></div>
-        </section>
+              <div class="rail-footer">
+                <span><i></i> Online</span>
+                <span id="home-clock">—</span>
+                <span>Windows beta</span>
+              </div>
+            </aside>
+          </section>
 
-        <section class="view" data-view-panel="network">
-          <div class="feature-layout">
-            <article class="feature-panel feature-panel-large">
-              <div class="panel-head">
-                <div><small>REAL CONNECTION TEST</small><h3>Diagnostic edges</h3></div>
-                <button id="run-network-test" class="secondary-button">Run 3-edge test</button>
-              </div>
-              <p class="panel-copy">Measure repeated TCP response, variation, and failed attempts against three independent internet edges.</p>
-              <div id="edge-results" class="edge-results">
-                <div><span>Cloudflare edge</span><strong>-</strong><small>Waiting</small></div>
-                <div><span>Google edge</span><strong>-</strong><small>Waiting</small></div>
-                <div><span>Quad9 edge</span><strong>-</strong><small>Waiting</small></div>
-              </div>
-            </article>
-            <article class="feature-panel">
-              <small>ROUTING NETWORK</small>
-              <h3>Relay regions</h3>
-              <div class="region-list">
-                <button disabled><span>Frankfurt</span><b>Planned</b></button>
-                <button disabled><span>Amsterdam</span><b>Planned</b></button>
-                <button disabled><span>London</span><b>Planned</b></button>
-              </div>
-              <p class="preview-warning">Region controls unlock after real relay servers pass route-quality testing.</p>
-            </article>
-          </div>
-        </section>
+          <section class="view feature-view" data-view-panel="easy-lobby">
+            <div class="feature-hero">
+              <div><p>REGION QUALITY COMPARISON</p><h1>Easy Lobby</h1><span>Find the most responsive game region for this session. No matchmaking manipulation.</span></div>
+              <button id="easy-lobby-compare" class="primary-button" type="button">Compare regions</button>
+            </div>
+            <div class="feature-grid">
+              <article class="feature-card large">
+                <div class="panel-heading"><div><small>DIRECT CONNECTION TEST</small><h2>Regional latency</h2></div><span id="easy-lobby-state" class="state-badge">NOT TESTED</span></div>
+                <div id="easy-lobby-results" class="region-results">
+                  <div class="empty-state"><strong>No region comparison yet</strong><span>Run a test to compare Frankfurt, London, Virginia, Oregon, Singapore, and Tokyo.</span></div>
+                </div>
+              </article>
+              <article class="feature-card">
+                <small class="eyebrow">WHAT IT DOES</small>
+                <h2>Better region choice</h2>
+                <ul class="truth-list">
+                  <li><i>✓</i><span>Measures latency, variation, and failed connections</span></li>
+                  <li><i>✓</i><span>Recommends the strongest direct region</span></li>
+                  <li><i>✓</i><span>Uses your selected or detected game context</span></li>
+                  <li class="muted"><i>×</i><span>Does not spoof regions or alter opponents</span></li>
+                </ul>
+                <p id="easy-lobby-note" class="feature-note">Relay routing is not enabled in this beta.</p>
+              </article>
+            </div>
+          </section>
 
-        <section class="view" data-view-panel="performance">
-          <div class="feature-layout">
-            <article class="feature-panel feature-panel-large">
-              <small>REVERSIBLE SESSION PROFILE</small>
-              <h3>PC performance</h3>
-              <p class="panel-copy">Apply one conservative Windows change only while you play. It is restored when the game closes, when you restore manually, or when Ping Optimizer exits.</p>
-              <label class="option-row">
-                <span><strong>High Performance power plan</strong><small>Temporarily prioritizes performance over energy saving.</small></span>
-                <input id="perf-power" type="checkbox" checked />
-              </label>
-              <label class="option-row">
-                <span><strong>Restore when the game closes</strong><small>The detected game process is monitored without reading or modifying game memory.</small></span>
-                <input type="checkbox" checked disabled />
-              </label>
-              <div class="action-row">
-                <button id="apply-performance" class="primary-action">Apply session profile</button>
-                <button id="restore-performance" class="secondary-button">Restore defaults</button>
-              </div>
-              <div id="performance-result" class="result-box">No performance changes are active.</div>
-            </article>
-            <article class="feature-panel evidence-panel">
-              <small>WHY THIS SETTING?</small>
-              <h3>Conservative by design</h3>
-              <p>We exclude game-process priority changes, registry packs, security-disabling scripts, universal timer tweaks, and fake RAM-cleaning claims.</p>
-              <ul>
-                <li>Session-scoped changes</li>
-                <li>Visible before applying</li>
-                <li>Automatic restoration</li>
-              </ul>
-            </article>
-          </div>
-        </section>
+          <section class="view feature-view" data-view-panel="fps">
+            <div class="feature-hero">
+              <div><p>MEASURED, REVERSIBLE PC TUNING</p><h1>FPS Boost</h1><span>Reduce avoidable system pressure without injecting into the game or promising fake FPS gains.</span></div>
+              <button id="fps-scan" class="primary-button" type="button">Scan this PC</button>
+            </div>
+            <div class="feature-grid">
+              <article class="feature-card large">
+                <div class="panel-heading"><div><small>LIVE SYSTEM LOAD</small><h2>Performance scan</h2></div><span id="fps-status" class="state-badge">READY</span></div>
+                <div class="performance-metrics">
+                  <div><small>CPU load</small><strong id="fps-cpu">—</strong><span>Measured by Windows</span></div>
+                  <div><small>GPU load</small><strong id="fps-gpu">—</strong><span id="fps-gpu-note">When available</span></div>
+                  <div><small>RAM used</small><strong id="fps-ram">—</strong><span>Measured by Windows</span></div>
+                  <div><small>In-game FPS</small><strong id="fps-value">N/A</strong><span>Collector not bundled</span></div>
+                </div>
+                <div class="benchmark-row">
+                  <button id="fps-baseline" class="secondary-button" type="button">Capture baseline</button>
+                  <button id="fps-apply" class="primary-button" type="button">Apply session boost</button>
+                  <button id="fps-after" class="secondary-button" type="button">Measure after</button>
+                  <button id="fps-rollback" class="ghost-button" type="button">Restore</button>
+                </div>
+                <div class="progress-track"><b id="fps-progress"></b></div>
+                <p id="fps-result" class="result-message">Start a supported game, then scan before applying a temporary performance profile.</p>
+              </article>
+              <article class="feature-card">
+                <small class="eyebrow">SAFE BY DESIGN</small>
+                <h2>What changes</h2>
+                <ul class="truth-list">
+                  <li><i>✓</i><span>Temporary Windows performance power plan</span></li>
+                  <li><i>✓</i><span>Automatic restore when the game closes</span></li>
+                  <li><i>✓</i><span>Before/after system-load comparison</span></li>
+                  <li class="muted"><i>×</i><span>No injection, memory edits, or timer-resolution tricks</span></li>
+                </ul>
+              </article>
+            </div>
+          </section>
 
-        <section class="view" data-view-panel="tools">
-          <div class="feature-layout">
-            <article class="feature-panel feature-panel-large">
-              <div class="panel-head">
-                <div><small>SAFE NETWORK REPAIR</small><h3>Connection health check</h3></div>
-                <button id="run-repair" class="primary-action">Run safe repair</button>
+          <section class="view feature-view" data-view-panel="network">
+            <div class="feature-hero">
+              <div><p>CONNECTION EVIDENCE</p><h1>Network diagnostics</h1><span>Compare stable public endpoints before changing anything on your PC.</span></div>
+              <button id="run-network-test" class="primary-button" type="button">Run 3-edge test</button>
+            </div>
+            <div class="metric-grid">
+              <article id="metric-latency" class="metric-card"><small>Response</small><strong class="metric-empty">—</strong><span>ms</span><p id="latency-status">Not measured</p></article>
+              <article id="metric-jitter" class="metric-card"><small>Variation</small><strong class="metric-empty">—</strong><span>ms</span><p id="jitter-status">Not measured</p></article>
+              <article id="metric-loss" class="metric-card"><small>Failed connects</small><strong class="metric-empty">—</strong><span>%</span><p id="loss-status">Not measured</p></article>
+            </div>
+            <article class="feature-card">
+              <div class="panel-heading"><div><small>TEST RESULTS</small><h2>Measured endpoints</h2></div><span class="state-badge">DIRECT</span></div>
+              <div id="edge-results" class="edge-results"><div class="empty-state"><strong>No results yet</strong><span>Run the test to create a connection report.</span></div></div>
+              <div class="diagnostic-notes">
+                <span><small>Best response</small><strong id="route-detail">Waiting for test</strong></span>
+                <span><small>Variation</small><strong id="jitter-detail">Waiting for test</strong></span>
+                <span><small>Failed connects</small><strong id="loss-detail">Waiting for test</strong></span>
               </div>
-              <p class="panel-copy">Checks DNS resolution, refreshes the Windows DNS cache, and reports active adapter status without resetting Winsock or requiring a restart.</p>
+            </article>
+          </section>
+
+          <section class="view feature-view" data-view-panel="tools">
+            <div class="feature-hero">
+              <div><p>SAFE RECOVERY</p><h1>Repair tools</h1><span>Check common Windows network problems with visible, limited actions.</span></div>
+              <button id="run-repair" class="primary-button" type="button">Run safe repair</button>
+            </div>
+            <article class="feature-card">
+              <div class="panel-heading"><div><small>WINDOWS NETWORK</small><h2>Repair report</h2></div><span class="state-badge">LOCAL</span></div>
               <div id="repair-results" class="repair-results">
-                <div><i></i><span><strong>DNS resolution</strong><small>Not checked</small></span></div>
-                <div><i></i><span><strong>DNS cache</strong><small>Not checked</small></span></div>
-                <div><i></i><span><strong>Active adapters</strong><small>Not checked</small></span></div>
+                <div class="empty-state"><strong>No repair check yet</strong><span>DNS, active adapters, and cache status will appear here.</span></div>
               </div>
             </article>
-            <article class="feature-panel">
-              <small>PROTECTED ACTIONS</small>
-              <h3>Nothing destructive</h3>
-              <p class="panel-copy">This preview will not reset your network stack, remove adapters, disable security, or change the registry.</p>
-              <div class="safe-card"><span>&check;</span><div><strong>Recovery-first</strong><small>Low-risk checks only</small></div></div>
-            </article>
-          </div>
-        </section>
+          </section>
 
-        <section class="view" data-view-panel="history">
-          <div class="view-toolbar">
-            <div><small>LAST 30 DIAGNOSES</small><strong>Your diagnostic history</strong></div>
-            <span class="local-only">Stored on this PC</span>
-          </div>
-          <div id="history-list" class="history-list">
-            <div class="empty-state"><strong>No sessions yet</strong><span>Run a connection diagnosis to create your first report.</span></div>
-          </div>
-        </section>
+          <section class="view feature-view" data-view-panel="history">
+            <div class="feature-hero">
+              <div><p>LOCAL SESSION RECORDS</p><h1>History</h1><span>Your recent measurements are stored only on this PC.</span></div>
+            </div>
+            <div id="history-list" class="history-list"></div>
+          </section>
 
-        <section class="view" data-view-panel="settings">
-          <div class="feature-layout">
-            <article class="feature-panel feature-panel-large">
-              <small>APPLICATION BEHAVIOR</small>
-              <h3>Preferences</h3>
+          <section class="view feature-view" data-view-panel="settings">
+            <div class="feature-hero">
+              <div><p>YOUR DEFAULTS</p><h1>Settings</h1><span>Choose what happens when Ping Optimizer starts.</span></div>
+              <button id="save-settings" class="primary-button" type="button">Save settings</button>
+            </div>
+            <article class="feature-card settings-card">
               <label class="option-row"><span><strong>Auto-detect games</strong><small>Scan running processes for supported game profiles.</small></span><input id="setting-auto-detect" type="checkbox" checked /></label>
-              <label class="option-row"><span><strong>Diagnose on launch</strong><small>Run connection measurements automatically when the app opens.</small></span><input id="setting-diagnose" type="checkbox" /></label>
-              <label class="option-row"><span><strong>Minimize to tray</strong><small>Prepared for a future background-service build.</small></span><input id="setting-tray" type="checkbox" disabled /></label>
-              <label class="select-row"><span><strong>Preferred optimization mode</strong><small>Changes diagnostic depth and recommendation scoring.</small></span><select id="setting-mode"><option>Automatic</option><option>Lowest latency</option><option>Maximum stability</option><option>Quick check</option></select></label>
-              <button id="save-settings" class="primary-action">Save preferences</button>
+              <label class="option-row"><span><strong>Diagnose on launch</strong><small>Run the direct connection check when the app opens.</small></span><input id="setting-diagnose" type="checkbox" /></label>
+              <label class="select-row"><span><strong>Default optimization mode</strong><small>Used for new sessions.</small></span><select id="setting-mode"><option>Automatic</option><option>Lowest latency</option><option>Maximum stability</option><option>Quick check</option></select></label>
             </article>
-            <article class="feature-panel">
-              <small>BUILD INFORMATION</small>
-              <h3>Ping Optimizer 0.3</h3>
-              <p class="panel-copy">Windows technical preview with continuous game detection, automatic session rollback, edge diagnostics, repair checks, local settings, and history.</p>
+          </section>
+
+          <section class="view feature-view" data-view-panel="account">
+            <div class="feature-hero">
+              <div><p>PING OPTIMIZER ACCOUNT</p><h1>Login or sign up</h1><span>Account screens are ready; secure online authentication must be connected before launch.</span></div>
+            </div>
+            <div class="account-layout">
+              <article class="feature-card auth-card">
+                <div class="auth-tabs"><button class="active" data-auth-tab="login" type="button">Login</button><button data-auth-tab="signup" type="button">Sign up</button></div>
+                <form id="account-form">
+                  <label><span>Email</span><input id="account-email" type="email" autocomplete="email" placeholder="player@example.com" required /></label>
+                  <label><span>Password</span><input id="account-password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" required /></label>
+                  <button class="primary-button" id="account-submit" type="submit">Continue securely</button>
+                </form>
+                <p id="account-result" class="feature-note">Online account service is not connected in this beta build.</p>
+              </article>
+              <article class="feature-card benefit-card">
+                <small class="eyebrow">WITH AN ACCOUNT</small><h2>Your setup, everywhere</h2>
+                <ul class="truth-list"><li><i>✓</i><span>Sync game and region preferences</span></li><li><i>✓</i><span>Manage trial and plan access</span></li><li><i>✓</i><span>Attach diagnostics to support requests</span></li></ul>
+              </article>
+            </div>
+          </section>
+
+          <section class="view feature-view" data-view-panel="trial">
+            <div class="feature-hero">
+              <div><p>NO CARD REQUIRED</p><h1>Start your free trial</h1><span>Preview every feature that is genuinely available in this build.</span></div>
+            </div>
+            <div class="account-layout">
+              <article class="feature-card trial-card">
+                <span class="trial-number">7</span><span class="trial-unit">days</span>
+                <h2>Founding beta trial</h2>
+                <ul class="truth-list"><li><i>✓</i><span>All game profiles</span></li><li><i>✓</i><span>Network and region diagnostics</span></li><li><i>✓</i><span>Reversible FPS session tools</span></li></ul>
+                <button id="start-trial" class="primary-button" type="button">Create account to start</button>
+                <p id="trial-result" class="feature-note">Secure trial entitlement requires the online account service.</p>
+              </article>
+              <article class="feature-card"><small class="eyebrow">CLEAR LIMITS</small><h2>Beta means beta</h2><p class="body-copy">Direct diagnostics and reversible Windows tuning work now. Production relay routing, signed updates, and billing remain locked until their services are ready.</p></article>
+            </div>
+          </section>
+
+          <section class="view feature-view" data-view-panel="redeem">
+            <div class="feature-hero"><div><p>ACTIVATE ACCESS</p><h1>Redeem a code</h1><span>Use a beta invitation or plan code connected to your account.</span></div></div>
+            <article class="feature-card redeem-card">
+              <label><span>Activation code</span><input id="redeem-code" type="text" placeholder="PING-XXXX-XXXX" autocomplete="off" /></label>
+              <button id="redeem-submit" class="primary-button" type="button">Check code</button>
+              <p id="redeem-result" class="feature-note">Code validation will connect to the secure account service before public launch.</p>
             </article>
-          </div>
-        </section>
+          </section>
+
+          <section class="view feature-view" data-view-panel="support">
+            <div class="feature-hero">
+              <div><p>PLAYER SUPPORT</p><h1>Customer support</h1><span>Collect the facts first, then send a useful beta report.</span></div>
+            </div>
+            <div class="support-grid">
+              <article class="feature-card support-option"><span>01</span><h2>Run diagnostics</h2><p>Measure the route and capture current system state before reporting a problem.</p><button data-open-view="network" class="secondary-button" type="button">Open diagnostics</button></article>
+              <article class="feature-card support-option"><span>02</span><h2>Copy support report</h2><p>Create a privacy-conscious summary of the app, game, and latest measurement.</p><button id="copy-support-report" class="secondary-button" type="button">Copy report</button></article>
+              <article class="feature-card support-option"><span>03</span><h2>Open beta support</h2><p>Use the project support channel while the dedicated help desk is being connected.</p><button id="open-support" class="primary-button" type="button">Open support</button></article>
+            </div>
+            <p id="support-result" class="result-message">No password, game memory, or private account data is included in a support report.</p>
+          </section>
+
+          <section class="view feature-view legacy-performance" data-view-panel="performance" hidden>
+            <input id="perf-power" type="checkbox" checked />
+            <button id="apply-performance" type="button">Apply session profile</button>
+            <button id="restore-performance" type="button">Restore</button>
+            <p id="performance-result"></p>
+          </section>
+        </main>
       </section>
     </div>
 
-    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="game-art.js"></script>
     <script src="renderer.js"></script>
   </body>
