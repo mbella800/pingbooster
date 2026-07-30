@@ -2,25 +2,10 @@
  * Supported game catalogue, with the visual identity used for game tiles.
  *
  * ── On artwork and trademarks ────────────────────────────────────────────────
- * We deliberately do NOT ship publishers' key art, logos, or character
- * renders. Those are copyrighted, and using them to promote a paid third-party
- * product is not something fair use reliably covers — a takedown or a
- * cease-and-desist would pull the storefront down at the worst possible moment,
- * and it also sours the publisher relationships that the co-marketing plans in
- * docs/architecture/05-rewards-and-drops.md depend on.
- *
- * What we use instead, which is both legally clean and genuinely recognisable:
- *
- *   1. The game's NAME, stated plainly. Naming a product to say truthfully
- *      that you work with it is ordinary nominative use.
- *   2. A palette associated with the game, so the tile reads as "that game" at
- *      a glance. Colour alone is not protectable.
- *   3. A genre glyph drawn by us.
- *
- * If we later want official art, the path is the publisher's press kit or brand
- * portal — most have one, many permit logo use under stated conditions, and key
- * art usually needs a written request. `artwork` below is the slot it drops
- * into when that happens; nothing else has to change.
+ * The current product preview uses publisher/store artwork so players can
+ * recognize profiles immediately. The source list and release-use caveat are
+ * documented in desktop/assets/covers/SOURCES.md. Before commercial release,
+ * every publisher's current promotional-use terms must be confirmed.
  */
 
 export type Genre = "tactical" | "battleRoyale" | "moba" | "shooter" | "sandbox" | "racing" | "mmo";
@@ -40,10 +25,7 @@ export interface Game {
    * this title and lets a tile say something concrete.
    */
   regions: string[];
-  /**
-   * Path to licensed official artwork, once obtained. Undefined means the tile
-   * renders our own generated treatment.
-   */
+  /** Path to documented publisher/store artwork used by this preview. */
   artwork?: string;
 }
 
@@ -55,6 +37,7 @@ export const GAMES: Game[] = [
     palette: ["#ff4655", "#0f1923"],
     profile: "Latency first",
     regions: ["Frankfurt", "London", "Istanbul"],
+    artwork: "/games/covers/valorant.webp",
   },
   {
     slug: "fortnite",
@@ -63,6 +46,7 @@ export const GAMES: Game[] = [
     palette: ["#7b2ff7", "#2ec5ff"],
     profile: "Balanced",
     regions: ["Amsterdam", "Ashburn", "São Paulo"],
+    artwork: "/games/covers/fortnite.webp",
   },
   {
     slug: "counter-strike-2",
@@ -71,6 +55,7 @@ export const GAMES: Game[] = [
     palette: ["#f5a623", "#1b2838"],
     profile: "Latency first",
     regions: ["Frankfurt", "Stockholm", "Singapore"],
+    artwork: "/games/covers/counter-strike-2.webp",
   },
   {
     slug: "league-of-legends",
@@ -79,6 +64,7 @@ export const GAMES: Game[] = [
     palette: ["#c8a04d", "#0a1428"],
     profile: "Stability first",
     regions: ["Frankfurt", "Istanbul", "Mumbai"],
+    artwork: "/games/covers/league-of-legends.webp",
   },
   {
     slug: "apex-legends",
@@ -87,6 +73,7 @@ export const GAMES: Game[] = [
     palette: ["#da292a", "#2b2b2b"],
     profile: "Latency first",
     regions: ["Amsterdam", "Ashburn", "Tokyo"],
+    artwork: "/games/covers/apex-legends.webp",
   },
   {
     slug: "call-of-duty",
@@ -95,6 +82,7 @@ export const GAMES: Game[] = [
     palette: ["#8fa61a", "#14161a"],
     profile: "Latency first",
     regions: ["Frankfurt", "Ashburn", "Dubai"],
+    artwork: "/games/covers/call-of-duty.webp",
   },
   {
     slug: "rocket-league",
@@ -103,6 +91,7 @@ export const GAMES: Game[] = [
     palette: ["#1f8ecd", "#f39c12"],
     profile: "Latency first",
     regions: ["Amsterdam", "Ashburn", "São Paulo"],
+    artwork: "/games/covers/rocket-league.webp",
   },
   {
     slug: "roblox",
@@ -111,6 +100,7 @@ export const GAMES: Game[] = [
     palette: ["#e2231a", "#1c1c1c"],
     profile: "Balanced",
     regions: ["Frankfurt", "Ashburn", "Singapore"],
+    artwork: "/games/covers/roblox.webp",
   },
   {
     slug: "dota-2",
@@ -119,6 +109,7 @@ export const GAMES: Game[] = [
     palette: ["#c23c2a", "#1b2838"],
     profile: "Stability first",
     regions: ["Frankfurt", "Stockholm", "Singapore"],
+    artwork: "/games/covers/dota-2.webp",
   },
   {
     slug: "overwatch-2",
@@ -127,6 +118,7 @@ export const GAMES: Game[] = [
     palette: ["#f99e1a", "#405275"],
     profile: "Latency first",
     regions: ["Frankfurt", "Ashburn", "Seoul"],
+    artwork: "/games/covers/overwatch-2.webp",
   },
   {
     slug: "world-of-warcraft",
@@ -135,6 +127,7 @@ export const GAMES: Game[] = [
     palette: ["#f4c430", "#123a5e"],
     profile: "Stability first",
     regions: ["Frankfurt", "Ashburn", "Sydney"],
+    artwork: "/games/covers/world-of-warcraft.webp",
   },
   {
     slug: "genshin-impact",
@@ -143,6 +136,7 @@ export const GAMES: Game[] = [
     palette: ["#4fc3f7", "#2b3a67"],
     profile: "Stability first",
     regions: ["Frankfurt", "Singapore", "Tokyo"],
+    artwork: "/games/covers/genshin-impact.webp",
   },
 ];
 

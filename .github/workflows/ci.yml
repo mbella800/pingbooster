@@ -1,4 +1,4 @@
-# CI only: lint and build on every push.
+# Validate the website, Rust decision core, and Windows desktop preview on every push.
 #
 # Deployment is handled by Vercel's Git integration, not by this workflow —
 # once the repository is imported at vercel.com, every push deploys
@@ -15,7 +15,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  website:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,3 +33,50 @@ jobs:
 
       - name: Build (Next.js, what Vercel runs)
         run: npm run build
+
+  rust-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Formatting
+        run: cargo fmt --all --check
+
+      - name: Lints
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Unit tests
+        run: cargo test --workspace
+
+  windows-preview:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install desktop dependencies
+        working-directory: desktop
+        run: npm ci
+
+      - name: Check desktop JavaScript
+        working-directory: desktop
+        run: npm run check && npm test
+
+      - name: Package Windows preview
+        working-directory: desktop
+        run: npm run package:win
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ping-optimizer-windows-preview
+          path: desktop/release/Ping Optimizer-win32-x64/**
+          if-no-files-found: error
