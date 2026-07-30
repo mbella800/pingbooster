@@ -33,7 +33,7 @@
         <header>
           <div>
             <p id="section-kicker">ONE-CLICK SESSION CONTROL</p>
-            <h1 id="section-title">Optimize your session</h1>
+            <h1 id="section-title">Diagnose your session</h1>
           </div>
           <div class="header-actions">
             <span class="preview-badge">TECHNICAL PREVIEW</span>
@@ -113,7 +113,7 @@
               </div>
 
               <button id="optimize" class="optimize-button">
-                <span id="optimize-label">Diagnose &amp; optimize</span>
+                <span id="optimize-label">Diagnose session</span>
                 <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
               </button>
               <p class="honesty-note">Relay routing is locked in this preview. Diagnostics and reversible PC tuning are live.</p>
@@ -179,14 +179,14 @@
             <article class="feature-panel feature-panel-large">
               <small>REVERSIBLE SESSION PROFILE</small>
               <h3>PC performance</h3>
-              <p class="panel-copy">Apply conservative Windows changes only while you play. Restore them with one click or when Ping Optimizer closes.</p>
+              <p class="panel-copy">Apply one conservative Windows change only while you play. It is restored when the game closes, when you restore manually, or when Ping Optimizer exits.</p>
               <label class="option-row">
                 <span><strong>High Performance power plan</strong><small>Temporarily prioritizes performance over energy saving.</small></span>
                 <input id="perf-power" type="checkbox" checked />
               </label>
               <label class="option-row">
-                <span><strong>Game process priority</strong><small>Raises the detected game to Windows High priority when permission allows.</small></span>
-                <input id="perf-priority" type="checkbox" checked />
+                <span><strong>Restore when the game closes</strong><small>The detected game process is monitored without reading or modifying game memory.</small></span>
+                <input type="checkbox" checked disabled />
               </label>
               <div class="action-row">
                 <button id="apply-performance" class="primary-action">Apply session profile</button>
@@ -195,9 +195,9 @@
               <div id="performance-result" class="result-box">No performance changes are active.</div>
             </article>
             <article class="feature-panel evidence-panel">
-              <small>WHY THESE TWO?</small>
-              <h3>Measured, not mythical</h3>
-              <p>We exclude random registry packs, security-disabling scripts, universal timer tweaks, and fake RAM-cleaning claims.</p>
+              <small>WHY THIS SETTING?</small>
+              <h3>Conservative by design</h3>
+              <p>We exclude game-process priority changes, registry packs, security-disabling scripts, universal timer tweaks, and fake RAM-cleaning claims.</p>
               <ul>
                 <li>Session-scoped changes</li>
                 <li>Visible before applying</li>
@@ -253,8 +253,8 @@
             </article>
             <article class="feature-panel">
               <small>BUILD INFORMATION</small>
-              <h3>Ping Optimizer 0.2</h3>
-              <p class="panel-copy">Windows technical preview with working game detection, edge diagnostics, session profiles, repair checks, local settings, and history.</p>
+              <h3>Ping Optimizer 0.3</h3>
+              <p class="panel-copy">Windows technical preview with continuous game detection, automatic session rollback, edge diagnostics, repair checks, local settings, and history.</p>
             </article>
           </div>
         </section>

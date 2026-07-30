@@ -1,11 +1,17 @@
 {
   "name": "ping-optimizer-preview",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Ping Optimizer Windows technical preview",
   "main": "main.cjs",
   "author": "Ping Optimizer",
   "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.cjs && node --check preload.cjs && node --check renderer.js && node --check game-art.js && node --check session-monitor.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "package:win": "electron-packager . \"Ping Optimizer\" --platform=win32 --arch=x64 --out=release --overwrite --asar --prune=true --ignore=\"^/release\" --ignore=\"^/tests\""
+  },
   "devDependencies": {
     "@electron/packager": "19.0.2",
     "electron": "39.2.7"

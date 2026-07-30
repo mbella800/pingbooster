@@ -16,9 +16,12 @@ const sectionKicker = document.querySelector("#section-kicker");
 let detectedGame = null;
 let supportedGames = [];
 let diagnosticRunning = false;
+let autoDetectEnabled = true;
+let stopGameEvents = null;
+let stopSessionEvents = null;
 
 const viewLabels = {
-  home: ["ONE-CLICK SESSION CONTROL", "Optimize your session"],
+  home: ["ONE-CLICK SESSION CONTROL", "Diagnose your session"],
   games: ["PROFILE LIBRARY", "Games"],
   network: ["CONNECTION EVIDENCE", "Network diagnostics"],
   performance: ["REVERSIBLE WINDOWS TUNING", "Performance"],
@@ -135,6 +138,45 @@ async function scanGame({ notify = false } = {}) {
   }
 }
 
+function handleGameChanged(game) {
+  if (!autoDetectEnabled) return;
+  const previousGame = detectedGame;
+  detectedGame = game;
+  if (game) {
+    updateGame(game.name, true);
+    sidebarState.textContent = `${game.name} detected`;
+    if (previousGame?.pid !== game.pid) {
+      showToast(`${game.name} started and was matched to its session profile.`);
+    }
+  } else {
+    detectionState.textContent = "READY";
+    sidebarState.textContent = "Ready";
+    document.querySelector("#pipeline-game").textContent = "No supported game running";
+    document.querySelector("#pipeline-game-state").textContent = "READY";
+    document.querySelector("#pipeline-game-state").classList.remove("done");
+    if (previousGame) showToast(`${previousGame.name} closed.`);
+  }
+  renderGames();
+}
+
+function renderPerformanceState(result, { notify = true } = {}) {
+  const panel = document.querySelector("#performance-result");
+  panel.textContent = result?.message ?? "The game closed. Temporary Windows settings were restored.";
+  panel.classList.toggle("success", !result?.active);
+  optimizeLabel.textContent = "Diagnose session";
+  sidebarState.textContent = result?.active ? "Restore needs attention" : "Ready";
+  document.querySelector("#pipeline-profile").textContent = result?.active
+    ? "Session restore pending"
+    : "Restored when the game closed";
+  document.querySelector("#pipeline-profile-state").textContent = result?.active ? "ATTENTION" : "RESTORED";
+  document.querySelector("#pipeline-profile-state").classList.remove("done");
+  if (notify) showToast(panel.textContent);
+}
+
+function handleAutomaticRestore(result) {
+  renderPerformanceState(result);
+}
+
 function renderGames() {
   const grid = document.querySelector("#games-grid");
   if (!grid) return;
@@ -242,11 +284,11 @@ async function runDiagnostics({ oneClick = false } = {}) {
     let performanceMessage = "";
 
     if (oneClick && detectedGame && modeSelect.value !== "Quick check") {
-      const profile = await api.applyPerformance({ powerPlan: true, processPriority: true });
+      const profile = await api.applyPerformance({ powerPlan: true });
       if (profile.applied.length) {
         performanceMessage = ` ${profile.applied.join(" and ")} applied for this session.`;
         optimizeLabel.textContent = "Session profile active";
-        sidebarState.textContent = "Optimized";
+        sidebarState.textContent = "Session profile active";
         document.querySelector("#pipeline-profile").textContent = profile.applied.join(" + ");
         document.querySelector("#pipeline-profile-state").textContent = "ACTIVE";
         document.querySelector("#pipeline-profile-state").classList.add("done");
@@ -288,7 +330,6 @@ async function applyPerformance() {
   try {
     const response = await api.applyPerformance({
       powerPlan: document.querySelector("#perf-power").checked,
-      processPriority: document.querySelector("#perf-priority").checked,
     });
     const messages = [];
     if (response.applied.length) messages.push(`Applied: ${response.applied.join(", ")}.`);
@@ -320,7 +361,7 @@ async function restorePerformance() {
   result.classList.toggle("success", response.restored.length > 0 && !response.active);
   sidebarState.textContent = response.active ? "Restore needs attention" : "Ready";
   document.querySelector("#pipeline-profile").textContent = response.active
-    ? "Power plan restore pending"
+    ? "Session restore pending"
     : "Only with a running game";
   document.querySelector("#pipeline-profile-state").textContent = response.active ? "ATTENTION" : "OPTIONAL";
   document.querySelector("#pipeline-profile-state").classList.remove("done");
@@ -372,6 +413,7 @@ async function refreshHistory() {
 async function loadSettings() {
   const settings = await api.getSettings();
   if (settings.preferredMode === "Data saver") settings.preferredMode = "Quick check";
+  autoDetectEnabled = settings.autoDetect;
   document.querySelector("#setting-auto-detect").checked = settings.autoDetect;
   document.querySelector("#setting-diagnose").checked = settings.diagnosticsOnLaunch;
   document.querySelector("#setting-mode").value = settings.preferredMode;
@@ -388,6 +430,7 @@ async function saveSettings() {
     preferredMode: document.querySelector("#setting-mode").value,
   };
   await api.saveSettings(settings);
+  autoDetectEnabled = settings.autoDetect;
   modeSelect.value = settings.preferredMode;
   updateModeDisplay();
   showToast("Preferences saved on this PC.");
@@ -426,8 +469,25 @@ async function initialize() {
   populateGameSelect();
   renderGames();
   const settings = await loadSettings();
+  stopGameEvents = api.onGameChanged?.(handleGameChanged) ?? null;
+  stopSessionEvents = api.onSessionRestored?.(handleAutomaticRestore) ?? null;
   if (settings.autoDetect) await scanGame();
+  const performanceState = await api.getPerformanceState?.();
+  if (performanceState?.active) {
+    renderPerformanceState(
+      {
+        ...performanceState,
+        message: `${performanceState.gameName ?? "A previous game"} still has a temporary power plan active. Open Performance and choose Restore.`,
+      },
+      { notify: false },
+    );
+  }
   if (settings.diagnosticsOnLaunch) runDiagnostics();
 }
+
+window.addEventListener("beforeunload", () => {
+  stopGameEvents?.();
+  stopSessionEvents?.();
+});
 
 initialize();

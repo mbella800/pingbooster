@@ -3,16 +3,17 @@
 Ping Optimizer is a Windows technical preview for game detection, repeatable
 connection diagnostics, and conservative session-only PC tuning.
 
-## What works in 0.2
+## What works in 0.3
 
 - Detects 12 supported Windows game processes.
+- Monitors game start/stop events and restores temporary session settings when
+  the detected game closes.
 - Selects a recommended diagnostic mode per game.
 - Runs repeated TCP connection tests against Cloudflare, Google, and Quad9
   edges.
 - Changes test depth and scoring for Automatic, Lowest latency, Maximum
   stability, and Quick check modes.
 - Can temporarily enable the Windows High Performance power plan.
-- Can temporarily raise a detected game process priority when Windows permits.
 - Records a rollback journal before PC changes and restores the original values
   on exit or the next launch after an interrupted session.
 - Runs low-risk DNS and adapter health checks.

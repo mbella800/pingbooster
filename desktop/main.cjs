@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
+const { SessionMonitor } = require("./session-monitor.cjs");
 
 const knownGames = [
   ["FortniteClient-Win64-Shipping.exe", "Fortnite", "Competitive"],
@@ -22,12 +23,19 @@ const knownGames = [
 ];
 
 const HIGH_PERFORMANCE_GUID = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c";
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
 let sessionState = {
   originalPowerPlan: null,
-  priorityPid: null,
-  originalPriority: null,
+  gamePid: null,
+  gameProcess: null,
+  gameName: null,
+  legacyPriorityPid: null,
+  legacyOriginalPriority: null,
   active: false,
 };
+let sessionOperation = Promise.resolve();
+let quitPending = false;
+let allowQuit = false;
 
 function dataFile(name) {
   return path.join(app.getPath("userData"), name);
@@ -51,7 +59,10 @@ function rollbackFile() {
 }
 
 function hasActiveChanges(state = sessionState) {
-  return Boolean(state.originalPowerPlan || state.priorityPid);
+  return Boolean(
+    state.originalPowerPlan ||
+      (state.legacyPriorityPid && Number.isFinite(state.legacyOriginalPriority)),
+  );
 }
 
 function persistRollbackJournal() {
@@ -62,34 +73,39 @@ function persistRollbackJournal() {
     } catch {}
     return;
   }
-  writeJson("rollback-journal.json", {
+  const journal = {
     originalPowerPlan: sessionState.originalPowerPlan,
-    priorityPid: sessionState.priorityPid,
-    originalPriority: sessionState.originalPriority,
+    gamePid: sessionState.gamePid,
+    gameProcess: sessionState.gameProcess,
+    gameName: sessionState.gameName,
     savedAt: new Date().toISOString(),
-  });
+  };
+  if (sessionState.legacyPriorityPid && Number.isFinite(sessionState.legacyOriginalPriority)) {
+    journal.priorityPid = sessionState.legacyPriorityPid;
+    journal.originalPriority = sessionState.legacyOriginalPriority;
+  }
+  writeJson("rollback-journal.json", journal);
 }
 
 function restoreStateSync(state) {
   let powerRestored = !state?.originalPowerPlan;
-  let priorityRestored = !state?.priorityPid || !Number.isFinite(state?.originalPriority);
+  const priorityPid = state?.legacyPriorityPid ?? state?.priorityPid;
+  const originalPriority = state?.legacyOriginalPriority ?? state?.originalPriority;
+  let priorityRestored = !priorityPid || !Number.isFinite(originalPriority);
   if (state?.originalPowerPlan) {
     try {
       execFileSync("powercfg.exe", ["/S", state.originalPowerPlan], { windowsHide: true });
       powerRestored = true;
     } catch {}
   }
-  if (state?.priorityPid && Number.isFinite(state.originalPriority)) {
+  // Version 0.2 could leave a process-priority rollback entry after a crash.
+  // Version 0.3 never applies this tweak, but it must still honor that old journal.
+  if (priorityPid && Number.isFinite(originalPriority)) {
     try {
-      os.setPriority(state.priorityPid, state.originalPriority);
+      os.setPriority(priorityPid, originalPriority);
       priorityRestored = true;
     } catch {
-      try {
-        os.getPriority(state.priorityPid);
-        priorityRestored = false;
-      } catch {
-        priorityRestored = true;
-      }
+      priorityRestored = !isPidRunning(priorityPid);
     }
   }
   return powerRestored && priorityRestored;
@@ -102,7 +118,22 @@ function recoverInterruptedSession() {
     try {
       fs.rmSync(rollbackFile(), { force: true });
     } catch {}
+    return;
   }
+  sessionState = {
+    originalPowerPlan: journal.originalPowerPlan ?? null,
+    gamePid: Number.isInteger(journal.gamePid) ? journal.gamePid : null,
+    gameProcess: journal.gameProcess ?? null,
+    gameName: journal.gameName ?? null,
+    legacyPriorityPid: Number.isInteger(journal.priorityPid) ? journal.priorityPid : null,
+    legacyOriginalPriority: Number.isFinite(journal.originalPriority)
+      ? journal.originalPriority
+      : null,
+    active: Boolean(
+      journal.originalPowerPlan ||
+        (Number.isInteger(journal.priorityPid) && Number.isFinite(journal.originalPriority)),
+    ),
+  };
 }
 
 function exec(program, args, options = {}) {
@@ -159,6 +190,28 @@ function detectRunningGame() {
         pid: pidMatch ? Number(pidMatch[1]) : null,
       });
     });
+  });
+}
+
+function isPidRunning(pid, expectedProcess = null) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    const output = execFileSync(
+      "tasklist.exe",
+      ["/FI", `PID eq ${pid}`, "/FO", "CSV", "/NH"],
+      { encoding: "utf8", windowsHide: true },
+    );
+    const match = output.match(/^"([^"]+)","(\d+)"/m);
+    if (!match || Number(match[2]) !== pid) return false;
+    return !expectedProcess || match[1].toLowerCase() === expectedProcess.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+function broadcast(channel, payload) {
+  BrowserWindow.getAllWindows().forEach((window) => {
+    if (!window.isDestroyed()) window.webContents.send(channel, payload);
   });
 }
 
@@ -251,12 +304,30 @@ function activePowerPlan() {
   }
 }
 
-async function applyPerformanceProfile(options = {}) {
+function runSessionOperation(operation) {
+  const result = sessionOperation.then(operation, operation);
+  sessionOperation = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
+
+async function applyPerformanceProfileUnlocked(options = {}) {
   const applied = [];
   const skipped = [];
   const game = await detectRunningGame();
 
   if (options.powerPlan) {
+    if (!game?.pid) {
+      skipped.push("Start a supported game before applying a session power plan");
+      return { applied, skipped, game, active: sessionState.active };
+    }
+    if (sessionState.active && sessionState.gamePid !== game.pid) {
+      skipped.push("Restore the active game session before starting another one");
+      return { applied, skipped, game, active: sessionState.active };
+    }
+
     const current = activePowerPlan();
     let capturedPowerPlan = false;
     try {
@@ -270,6 +341,9 @@ async function applyPerformanceProfile(options = {}) {
       } else {
         if (!sessionState.originalPowerPlan) {
           sessionState.originalPowerPlan = current;
+          sessionState.gamePid = game.pid;
+          sessionState.gameProcess = game.process;
+          sessionState.gameName = game.name;
           capturedPowerPlan = true;
           persistRollbackJournal();
         }
@@ -279,41 +353,12 @@ async function applyPerformanceProfile(options = {}) {
     } catch {
       if (capturedPowerPlan) {
         sessionState.originalPowerPlan = null;
+        sessionState.gamePid = null;
+        sessionState.gameProcess = null;
+        sessionState.gameName = null;
         persistRollbackJournal();
       }
       skipped.push("Power plan could not be changed");
-    }
-  }
-
-  if (options.processPriority) {
-    if (!game?.pid) {
-      skipped.push("No supported running game was detected");
-    } else {
-      try {
-        if (sessionState.priorityPid && sessionState.priorityPid !== game.pid) {
-          skipped.push("Another game session already has a temporary priority change");
-        } else {
-          if (!sessionState.priorityPid) {
-            sessionState.priorityPid = game.pid;
-            sessionState.originalPriority = os.getPriority(game.pid);
-            persistRollbackJournal();
-          }
-          os.setPriority(game.pid, os.constants.priority.PRIORITY_HIGH);
-          applied.push(`${game.name} process priority`);
-        }
-      } catch {
-        if (sessionState.priorityPid === game.pid) {
-          if (Number.isFinite(sessionState.originalPriority)) {
-            try {
-              os.setPriority(game.pid, sessionState.originalPriority);
-            } catch {}
-          }
-          sessionState.priorityPid = null;
-          sessionState.originalPriority = null;
-          persistRollbackJournal();
-        }
-        skipped.push(`${game.name} priority needs additional Windows permission`);
-      }
     }
   }
 
@@ -321,12 +366,24 @@ async function applyPerformanceProfile(options = {}) {
   return { applied, skipped, game, active: sessionState.active };
 }
 
-async function restorePerformanceProfile() {
+function applyPerformanceProfile(options = {}) {
+  if (quitPending) {
+    return Promise.resolve({
+      applied: [],
+      skipped: ["Ping Optimizer is closing"],
+      game: null,
+      active: sessionState.active,
+    });
+  }
+  return runSessionOperation(() => applyPerformanceProfileUnlocked(options));
+}
+
+async function restorePerformanceProfileUnlocked() {
   const restored = [];
   const failed = [];
   let remainingPowerPlan = sessionState.originalPowerPlan;
-  let remainingPriorityPid = sessionState.priorityPid;
-  let remainingOriginalPriority = sessionState.originalPriority;
+  let remainingLegacyPriorityPid = sessionState.legacyPriorityPid;
+  let remainingLegacyOriginalPriority = sessionState.legacyOriginalPriority;
   if (sessionState.originalPowerPlan) {
     try {
       await exec("powercfg.exe", ["/S", sessionState.originalPowerPlan]);
@@ -336,36 +393,43 @@ async function restorePerformanceProfile() {
       failed.push("Previous power plan could not be restored");
     }
   }
-  if (sessionState.priorityPid) {
+  if (
+    sessionState.legacyPriorityPid &&
+    Number.isFinite(sessionState.legacyOriginalPriority)
+  ) {
     try {
-      os.setPriority(
-        sessionState.priorityPid,
-        Number.isFinite(sessionState.originalPriority)
-          ? sessionState.originalPriority
-          : os.constants.priority.PRIORITY_NORMAL,
-      );
-      restored.push("Previous process priority");
-      remainingPriorityPid = null;
-      remainingOriginalPriority = null;
+      os.setPriority(sessionState.legacyPriorityPid, sessionState.legacyOriginalPriority);
+      restored.push("Previous game process priority");
+      remainingLegacyPriorityPid = null;
+      remainingLegacyOriginalPriority = null;
     } catch {
-      try {
-        os.getPriority(sessionState.priorityPid);
+      if (isPidRunning(sessionState.legacyPriorityPid)) {
         failed.push("Previous game process priority could not be restored");
-      } catch {
-        restored.push("Game process already ended");
-        remainingPriorityPid = null;
-        remainingOriginalPriority = null;
+      } else {
+        restored.push("Previous game process already ended");
+        remainingLegacyPriorityPid = null;
+        remainingLegacyOriginalPriority = null;
       }
     }
   }
   sessionState = {
     originalPowerPlan: remainingPowerPlan,
-    priorityPid: remainingPriorityPid,
-    originalPriority: remainingOriginalPriority,
-    active: Boolean(remainingPowerPlan || remainingPriorityPid),
+    gamePid:
+      remainingPowerPlan || remainingLegacyPriorityPid ? sessionState.gamePid : null,
+    gameProcess:
+      remainingPowerPlan || remainingLegacyPriorityPid ? sessionState.gameProcess : null,
+    gameName:
+      remainingPowerPlan || remainingLegacyPriorityPid ? sessionState.gameName : null,
+    legacyPriorityPid: remainingLegacyPriorityPid,
+    legacyOriginalPriority: remainingLegacyOriginalPriority,
+    active: Boolean(remainingPowerPlan || remainingLegacyPriorityPid),
   };
   persistRollbackJournal();
   return { restored, failed, active: sessionState.active };
+}
+
+function restorePerformanceProfile() {
+  return runSessionOperation(restorePerformanceProfileUnlocked);
 }
 
 function restorePerformanceSync() {
@@ -412,43 +476,82 @@ async function runSafeRepair() {
   return { checks, testedAt: new Date().toISOString() };
 }
 
-ipcMain.handle("game:detect", detectRunningGame);
-ipcMain.handle("games:list", () =>
-  knownGames.map(([process, name, recommendedMode]) => ({ process, name, recommendedMode })),
-);
-ipcMain.handle("network:diagnose", (_event, request) => runDiagnostics(request));
-ipcMain.handle("performance:apply", (_event, options) => applyPerformanceProfile(options));
-ipcMain.handle("performance:restore", restorePerformanceProfile);
-ipcMain.handle("tools:repair", runSafeRepair);
-ipcMain.handle("history:list", () => readJson("history.json", []));
-ipcMain.handle("settings:get", () =>
-  readJson("settings.json", {
-    autoDetect: true,
-    diagnosticsOnLaunch: false,
-    minimizeToTray: false,
-    preferredMode: "Automatic",
-  }),
-);
-ipcMain.handle("settings:save", (_event, settings) => {
-  writeJson("settings.json", settings);
-  return settings;
-});
-ipcMain.on("window:minimize", (event) => BrowserWindow.fromWebContents(event.sender)?.minimize());
-ipcMain.on("window:close", async (event) => {
-  await restorePerformanceProfile();
-  BrowserWindow.fromWebContents(event.sender)?.close();
+const gameSessionMonitor = new SessionMonitor({
+  detectRunningGame,
+  isPidRunning,
+  getSessionState: () => ({ ...sessionState }),
+  restoreSession: restorePerformanceProfile,
+  emit: broadcast,
 });
 
-app.whenReady().then(() => {
-  recoverInterruptedSession();
-  createWindow();
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+if (!hasSingleInstanceLock) {
+  app.quit();
+} else {
+  ipcMain.handle("game:detect", detectRunningGame);
+  ipcMain.handle("games:list", () =>
+    knownGames.map(([process, name, recommendedMode]) => ({ process, name, recommendedMode })),
+  );
+  ipcMain.handle("network:diagnose", (_event, request) => runDiagnostics(request));
+  ipcMain.handle("performance:apply", (_event, options) => applyPerformanceProfile(options));
+  ipcMain.handle("performance:restore", restorePerformanceProfile);
+  ipcMain.handle("performance:state", () => ({
+    active: sessionState.active,
+    gameName: sessionState.gameName,
+  }));
+  ipcMain.handle("tools:repair", runSafeRepair);
+  ipcMain.handle("history:list", () => readJson("history.json", []));
+  ipcMain.handle("settings:get", () =>
+    readJson("settings.json", {
+      autoDetect: true,
+      diagnosticsOnLaunch: false,
+      minimizeToTray: false,
+      preferredMode: "Automatic",
+    }),
+  );
+  ipcMain.handle("settings:save", (_event, settings) => {
+    writeJson("settings.json", settings);
+    return settings;
   });
-});
+  ipcMain.on("window:minimize", (event) => BrowserWindow.fromWebContents(event.sender)?.minimize());
+  ipcMain.on("window:close", (event) => BrowserWindow.fromWebContents(event.sender)?.close());
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
+  app.on("second-instance", () => {
+    const window = BrowserWindow.getAllWindows()[0];
+    if (!window) return;
+    if (window.isMinimized()) window.restore();
+    window.show();
+    window.focus();
+  });
 
-app.on("will-quit", restorePerformanceSync);
+  app.whenReady().then(() => {
+    recoverInterruptedSession();
+    createWindow();
+    gameSessionMonitor.start();
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  });
+
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") app.quit();
+  });
+
+  app.on("before-quit", (event) => {
+    if (allowQuit) return;
+    event.preventDefault();
+    if (quitPending) return;
+    quitPending = true;
+    gameSessionMonitor.stop();
+    void restorePerformanceProfile()
+      .catch(() => {})
+      .finally(() => {
+        allowQuit = true;
+        app.quit();
+      });
+  });
+
+  app.on("will-quit", () => {
+    gameSessionMonitor.stop();
+    restorePerformanceSync();
+  });
+}
