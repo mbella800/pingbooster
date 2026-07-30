@@ -306,3 +306,244 @@ header h1 { margin: 0; font-size: 24px; letter-spacing: -.04em; }
     transition-duration:.01ms !important;
   }
 }
+
+/* ===========================================================================
+   Icon system + layout corrections
+   ===========================================================================
+   The sidebar, the detected-game badge and the evidence rows previously used
+   single capital letters ("H", "G", "N", "R", "J", "L") as stand-in icons, and
+   the primary CTA used an emoji. Both read as unfinished, and the emoji renders
+   as a flat monochrome glyph on Windows. Replaced with drawn SVG icons, inline
+   so the app pulls in no icon font and makes no extra request.
+   =========================================================================== */
+
+.nav-icon,
+.evidence-icon,
+.game-icon,
+.button-icon {
+  display: grid;
+  place-items: center;
+}
+
+.nav-icon svg,
+.evidence-icon svg,
+.game-icon svg,
+.button-icon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sidebar */
+.nav-item span.nav-icon {
+  width: 20px;
+  height: 20px;
+  color: #6d8098;
+}
+
+.nav-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-item.active span.nav-icon {
+  color: var(--mint);
+}
+
+/* Detected game badge. 70px with a 28px letter left a lot of empty box; a
+   20px glyph in a 56px tile is a more conventional ratio and frees vertical
+   space, which the layout needs (see the overflow fix below). */
+.game-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 15px;
+}
+
+.game-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+}
+
+/* Evidence rows */
+.evidence-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Primary CTA arrow, replacing the emoji. */
+.button-icon {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+}
+
+.button-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button-icon svg {
+    transition: transform .22s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .button-primary:hover .button-icon svg {
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 1180px) {
+  /* Overrides the font-size rule that targeted the old letter icons. */
+  .nav-item span.nav-icon {
+    font-size: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Layout: content was being clipped at the bottom of the default window.
+   At the app's own default size (1440x900) the last line of the preview notice
+   was cut off mid-sentence. The shell now scrolls its content region instead of
+   overflowing, and the type scale below reclaims the space that caused it.
+   --------------------------------------------------------------------------- */
+.workspace {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #24384a transparent;
+}
+
+.workspace::-webkit-scrollbar {
+  width: 9px;
+}
+
+.workspace::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background: #24384a;
+}
+
+/* Empty-state metric value: quiet en dash, not a bold hyphen that looks like a
+   rendering glitch. The value spans swap to real numbers once a diagnosis runs. */
+.metric-empty {
+  color: #4d6076;
+  font-weight: 500;
+}
+
+/* The detected-game title was 36px — larger than the page's own H1 — for a value
+   that just mirrors a dropdown selection. Bringing it into the type scale
+   removes a chunk of the vertical overflow on its own. */
+.game-identity h2 {
+  font-size: 26px;
+  letter-spacing: -.03em;
+}
+
+/* --- Game profile cards: per-game art ------------------------------------- */
+/* Previously each card showed the first letter of the game's name in a small
+   tile. Now the card carries the game's colour and a genre glyph, so a grid of
+   them is scannable. Identity is palette + glyph + name — never publisher
+   artwork; see the note at the top of game-art.js. */
+
+.game-profile {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 84px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background:
+    radial-gradient(ellipse 80% 70% at 26% 14%, color-mix(in srgb, var(--tile-a, #48f2c3) 68%, transparent), transparent 70%),
+    linear-gradient(155deg, color-mix(in srgb, var(--tile-a, #48f2c3) 24%, #08111c), var(--tile-b, #111f31));
+}
+
+.profile-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 10, 18, .85), transparent 70%);
+}
+
+.profile-wash {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, .05) 0 1px, transparent 1px 9px);
+  mix-blend-mode: overlay;
+}
+
+.profile-art svg {
+  position: relative;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: rgba(255, 255, 255, .95);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 9px rgba(0, 0, 0, .6));
+}
+
+.game-profile .game-profile-top {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+.game-profile h3 {
+  margin: 12px 16px 0;
+}
+
+.game-profile p {
+  margin: 5px 16px 0;
+}
+
+.game-profile button {
+  margin: 12px 16px 16px;
+}
+
+/* The decorative ring sat behind the letter tile; with real art above it just
+   adds noise. */
+.game-profile:after {
+  content: none;
+}
+
+@media (hover: hover) {
+  .game-profile:hover {
+    border-color: color-mix(in srgb, var(--tile-a, #48f2c3) 45%, var(--line));
+  }
+
+  .game-profile:hover .profile-art svg {
+    transform: scale(1.08);
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+  }
+}
+
+.metric-value {
+  color: inherit;
+}
+
+/* Detected-game badge picks up the game's palette once updateGame paints it. */
+.game-icon {
+  color: #fff;
+  border-color: color-mix(in srgb, var(--tile-a, #48f2c3) 40%, transparent);
+  background:
+    radial-gradient(ellipse 90% 70% at 30% 15%, color-mix(in srgb, var(--tile-a, #48f2c3) 55%, transparent), transparent 72%),
+    linear-gradient(155deg, color-mix(in srgb, var(--tile-a, #48f2c3) 22%, #08111c), var(--tile-b, #111f31));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
+}
+
+/* Value and unit on one baseline, whatever elements they happen to be. */
+.metric-grid strong {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}

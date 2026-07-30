@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/pb-proto",
+    "crates/pb-probe",
+    "crates/pb-core",
+]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.75"
+license = "UNLICENSED"
+repository = "https://github.com/mbella800/pingbooster"
+
+[workspace.dependencies]
+pb-proto = { path = "crates/pb-proto" }
+pb-probe = { path = "crates/pb-probe" }
+
+# Deliberately dependency-free for now.
+#
+# These crates hold the platform-agnostic core: measurement, scoring, selection and
+# session state. All of it is expressible in std, and keeping it that way means
+# `cargo test --workspace` runs anywhere with no network and no platform SDK. That
+# matters because this is the code most worth testing and least worth making awkward
+# to test.
+#
+# Dependencies arrive with the layers that genuinely need them, scoped to those crates:
+#   pb-tunnel     -> quinn, ring/chacha20poly1305, socket2
+#   pb-platform   -> windows-sys, wintun
+#   services/*    -> axum, sqlx, tokio
+#   serde derives -> added to pb-proto when the wire codec lands (see pb-proto/src/wire.rs)
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true

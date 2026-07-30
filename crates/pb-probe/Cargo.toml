@@ -1,0 +1,11 @@
+[package]
+name = "pb-probe"
+version = "0.1.0"
+description = "Path measurement, scoring and selection. The routing intelligence."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+pb-proto.workspace = true

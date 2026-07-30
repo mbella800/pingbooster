@@ -25,7 +25,7 @@ body {
     radial-gradient(circle at 50% -20%, rgba(21, 86, 109, 0.28), transparent 34rem),
     var(--navy);
   color: var(--ink);
-  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-family: var(--font-body), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -226,7 +226,7 @@ main {
 .eyebrow {
   margin: 0 0 24px;
   color: var(--mint);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -301,7 +301,7 @@ main {
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.025);
   font-size: 10px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -329,7 +329,7 @@ main {
   justify-content: space-between;
   color: #6f8297;
   font-size: 10px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
 }
 
 .window-dots {
@@ -431,7 +431,7 @@ main {
   display: flex;
   gap: clamp(18px, 4vw, 52px);
   color: #5f7187;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.1em;
 }
@@ -501,7 +501,7 @@ main {
 
 .step-topline > span {
   color: #577084;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
 }
 
@@ -510,7 +510,7 @@ main {
   color: #7590a5;
   border: 1px solid rgba(143, 176, 207, 0.13);
   border-radius: 999px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
   font-weight: 550;
   letter-spacing: 0.08em;
@@ -661,7 +661,7 @@ main {
 .proof-card-head small {
   margin-bottom: 7px;
   color: #60748a;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.1em;
 }
@@ -677,7 +677,7 @@ main {
   border-radius: 100px;
   background: rgba(72, 242, 195, 0.06);
   font-size: 9px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   text-transform: uppercase;
 }
 
@@ -693,7 +693,7 @@ main {
   display: block;
   margin-bottom: 7px;
   color: #698097;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
 }
 
@@ -721,7 +721,7 @@ main {
   align-items: center;
   gap: 9px;
   color: var(--mint);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
 }
 
@@ -816,7 +816,7 @@ main {
 
 .mode-topline > span {
   color: #486179;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
 }
 
@@ -830,7 +830,7 @@ main {
   border: 1px solid rgba(72, 242, 195, 0.2);
   border-radius: 8px;
   background: rgba(72, 242, 195, 0.05);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
   font-style: normal;
   letter-spacing: 0.06em;
@@ -868,7 +868,7 @@ main {
 
 .mode-signal span {
   color: #8fa3b7;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -926,7 +926,7 @@ main {
 .comparison-head {
   min-height: 54px;
   color: #5d7187;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1020,7 +1020,7 @@ main {
   border: 1px solid rgba(72, 242, 195, 0.2);
   border-radius: 999px;
   background: rgba(72, 242, 195, 0.05);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 7px;
   letter-spacing: 0.1em;
 }
@@ -1331,7 +1331,7 @@ main {
 .launch-stats span {
   margin-top: 4px;
   color: #60748b;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1526,7 +1526,7 @@ main {
 
 .network-node span {
   color: #dce9e6;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   font-weight: 700;
 }
@@ -1583,7 +1583,7 @@ main {
 
 .route-status-head {
   color: #72879d;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
 }
 
@@ -1616,7 +1616,7 @@ main {
 .route-score-row small {
   margin-bottom: 3px;
   color: #536b82;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 7px;
 }
 
@@ -1643,7 +1643,7 @@ main {
   align-items: center;
   gap: 6px;
   color: var(--mint);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 7px;
 }
 
@@ -1712,7 +1712,7 @@ main {
 
 .stage-chip span {
   color: #546a81;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 6px;
   letter-spacing: 0.09em;
 }
@@ -1790,7 +1790,7 @@ main {
 .console-status small,
 .console-metric small {
   color: #5d7187;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 7px;
   letter-spacing: 0.09em;
 }
@@ -1921,7 +1921,7 @@ main {
   align-items: center;
   gap: 11px;
   color: #65788e;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.09em;
@@ -2559,10 +2559,12 @@ main {
     align-items: center;
   }
 
+  /* Was: width:100% + space-between + 6px labels — three tiny items smeared
+     across the full row with unreadable captions. A centred cluster with a
+     fixed gap keeps the trio reading as one unit at any width. */
   .launch-stats {
-    width: 100%;
-    gap: 8px;
-    justify-content: space-between;
+    justify-content: center;
+    gap: clamp(24px, 8vw, 44px);
   }
 
   .launch-stats div {
@@ -2574,7 +2576,8 @@ main {
   }
 
   .launch-stats span {
-    font-size: 6px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
   }
 
   .network-stage {
@@ -2760,4 +2763,478 @@ main {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ===========================================================================
+   Game tiles, motion and layout corrections
+   ===========================================================================
+   Added on top of the existing sheet so these rules win ties without having to
+   edit rules above. Three things are addressed:
+
+   1. Per-game imagery, so players recognise their game instead of reading a
+      text marquee. Identity comes from each game's palette plus a genre glyph
+      we drew — never publisher artwork. See the note at the top of app/games.ts.
+   2. The fixed nav was slicing through section headings as they scrolled under
+      it (visible on "More control without more confusion.").
+   3. Vertical rhythm. 108px section padding plus tall inner margins left large
+      dead voids; the desktop page was 5648px and mobile 8009px for a modest
+      amount of content.
+   =========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- 2. Nav must fully mask content passing beneath it -------------------- */
+
+/* At the very top the nav sits over the hero glow, where a glassy translucent
+   panel looks good and there is no text to collide with. Once scrolled, any
+   heading can pass underneath, so the backdrop becomes effectively opaque.
+   backdrop-filter alone is not enough — it is unsupported or disabled often
+   enough that legibility cannot depend on it. */
+.site-nav.is-scrolled {
+  background: rgba(6, 13, 23, 0.985);
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+  .site-nav {
+    background: rgba(6, 13, 23, 0.985);
+  }
+}
+
+/* Anchor jumps land the heading below the nav rather than under it. */
+html {
+  scroll-padding-top: 104px;
+}
+
+/* --- 3. Tighter, more even vertical rhythm -------------------------------- */
+
+.section {
+  padding: 76px 0;
+}
+
+.section + .section {
+  padding-top: 40px;
+}
+
+.games-section {
+  padding-top: 64px;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 52px 0;
+  }
+
+  .section + .section {
+    padding-top: 28px;
+  }
+}
+
+/* --- 1. Game tiles -------------------------------------------------------- */
+
+.game-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  isolation: isolate;
+}
+
+/* Portrait, like a game cover — a wall of these is what players scan, and a
+   landscape thumbnail strip does not read the same way. */
+.tile-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background:
+    /* key light from the top-left, in the game's colour */
+    radial-gradient(ellipse 80% 55% at 26% 12%, color-mix(in srgb, var(--tile-a) 72%, transparent), transparent 68%),
+    /* counter-glow bottom-right for depth */
+    radial-gradient(ellipse 70% 50% at 88% 92%, color-mix(in srgb, var(--tile-a) 30%, transparent), transparent 62%),
+    /* body of the cover */
+    linear-gradient(158deg, color-mix(in srgb, var(--tile-a) 26%, #08111c) 0%, var(--tile-b) 62%, #050b14 100%);
+}
+
+/* Vignette so the overlaid title always has contrast to sit against, whatever
+   the game's palette happens to be. */
+.tile-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(3, 8, 15, 0.92) 0%, rgba(3, 8, 15, 0.35) 34%, transparent 62%),
+    radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(0, 0, 0, 0.42) 100%);
+  pointer-events: none;
+}
+
+.tile-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Faint diagonal texture so a flat gradient does not read as a placeholder. */
+.tile-wash {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 9px
+  );
+  mix-blend-mode: overlay;
+}
+
+.tile-glyph {
+  position: relative;
+  z-index: 1;
+  /* Sits high in the frame so the lower third stays clear for the title. */
+  margin-bottom: 22%;
+  width: 44%;
+  max-width: 86px;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.94);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 3px 14px rgba(0, 0, 0, 0.6));
+}
+
+/* The title overlays the art like a cover, rather than sitting in a separate
+   strip below it. */
+.tile-body {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 12px 13px 13px;
+}
+
+.tile-body h3 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 680;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+.tile-profile {
+  margin: 5px 0 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+/* Slides up over the art on hover/focus. Uses logical inset properties so the
+   RTL locales in docs/architecture/07-internationalisation.md work unchanged. */
+.tile-detail {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px 12px;
+  background: linear-gradient(0deg, rgba(4, 10, 18, 0.97), rgba(4, 10, 18, 0.82));
+  border-top: 1px solid rgba(121, 242, 211, 0.22);
+  transform: translateY(101%);
+  transition: transform 260ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.tile-detail-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tile-detail-value {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  .game-tile {
+    transition:
+      transform 240ms cubic-bezier(.2, .8, .2, 1),
+      border-color 240ms ease,
+      box-shadow 240ms ease;
+  }
+
+  .game-tile:hover {
+    transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--tile-a) 55%, var(--line));
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+
+  .game-tile:hover .tile-detail,
+  .game-tile:focus-within .tile-detail {
+    transform: translateY(0);
+  }
+
+  .game-tile:hover .tile-glyph {
+    transform: scale(1.06);
+    transition: transform 400ms cubic-bezier(.2, .8, .2, 1);
+  }
+}
+
+/* Touch devices get no hover, so show the detail rather than hide it forever. */
+@media (hover: none) {
+  .tile-detail {
+    position: static;
+    transform: none;
+    background: none;
+    border-top: 1px solid var(--line);
+    padding: 9px 14px 12px;
+  }
+}
+
+/* --- Moving rail ---------------------------------------------------------- */
+
+.game-rail-section {
+  position: relative;
+  width: min(1180px, calc(100% - 48px));
+  margin: 8px auto 0;
+}
+
+.game-rail {
+  position: relative;
+  overflow: hidden;
+  /* Fade both edges so tiles enter and leave instead of being chopped off — the
+     text marquee this replaces was visibly cut mid-word at the viewport edge. */
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.game-rail-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  padding: 4px 0 10px;
+}
+
+.rail-clone {
+  display: flex;
+  gap: 14px;
+  margin-inline-start: 14px;
+}
+
+.game-rail-track > .game-tile,
+.rail-clone > .game-tile {
+  flex: 0 0 148px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .game-rail-track {
+    animation: game-rail 46s linear infinite;
+  }
+
+  /* Pausing on hover is what makes the rail usable rather than decorative —
+     otherwise a tile slides away as you reach for it. */
+  .game-rail:hover .game-rail-track,
+  .game-rail:focus-within .game-rail-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes game-rail {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    /* Exactly half the track: the second half is the clone, so this loops
+       seamlessly with no visible jump. */
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.game-rail-note {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* --- Full grid ------------------------------------------------------------ */
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  gap: 14px;
+  margin-top: 26px;
+}
+
+@media (max-width: 520px) {
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* --- Live console --------------------------------------------------------- */
+/* The direct reading swings while the optimized one holds steady. That contrast
+   is the product demo: we are not claiming a smaller average, we are showing a
+   stable line against an unstable one. */
+
+.console-game-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--tile-a, #48f2c3) 60%, #0a1420), var(--tile-b, #111f31));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+
+.console-game-icon svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.console-game-name {
+  display: inline-block;
+}
+
+/* Tabular figures stop the row shifting sideways as digits change — otherwise
+   the whole console jiggles on every update, which reads as broken. */
+.console-num {
+  display: inline-block;
+  min-width: 2.2ch;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .console-num {
+    transition: color 200ms ease;
+  }
+
+  .console-num.is-unstable {
+    animation: console-unstable 900ms ease-in-out infinite;
+  }
+
+  .console-game-name {
+    animation: console-swap 420ms cubic-bezier(.2, .8, .2, 1);
+  }
+}
+
+@keyframes console-unstable {
+  0%, 100% { color: var(--ink); }
+  40% { color: #ffb4a8; }
+}
+
+@keyframes console-swap {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Replaces a lightning emoji and "››" text chevrons. An emoji in a primary CTA
+   renders differently on every platform and reads as unfinished. */
+.console-button svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .console-button svg {
+    transition: transform 220ms cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .console-button:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* --- Game tile structure correction -------------------------------------- */
+/* The title is anchored inside .tile-art. On hover devices the detail panel
+   slides up over the art; on touch devices it sits below the art, and because
+   the title is scoped to the art box the two can never overlap. */
+
+.tile-art > .tile-body {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  bottom: 0;
+}
+
+.tile-detail {
+  /* Cover only the art, not the whole tile. */
+  inset-block-start: auto;
+}
+
+@media (hover: none) {
+  .game-tile {
+    /* Art then detail, stacked — no absolute positioning to collide. */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tile-detail {
+    position: static;
+    transform: none;
+    background: none;
+    border-top: 1px solid var(--line);
+    padding-block: 9px 11px;
+  }
+}
+
+/* --- Type system ----------------------------------------------------------- */
+/* Chakra Petch for display, IBM Plex Sans for running text, IBM Plex Mono for
+   labels and live numerics (set via next/font in app/layout.tsx). Chakra Petch
+   is squarer than the Geist it replaces, so the very tight negative tracking
+   the old headings carried would crush it — these overrides re-tune the big
+   sizes for the new face. */
+
+h1, h2, h3,
+.brand > span:last-child {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+.hero-v2 h1 {
+  letter-spacing: -0.022em;
+}
+
+h2 {
+  letter-spacing: -0.015em;
+}
+
+.game-identity h2,
+.showcase-copy h2 {
+  letter-spacing: -0.018em;
+}
+
+/* Big live numerals: display face, steady digits. */
+.metric-hero strong,
+.console-metric strong,
+.launch-stats strong {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-variant-numeric: tabular-nums;
 }

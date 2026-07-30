@@ -21,7 +21,6 @@
 
 # misc
 .DS_Store
-*.pem
 
 # debug
 npm-debug.log*
@@ -41,3 +40,17 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# rust
+/target
+**/*.rs.bk
+Cargo.lock.orig
+
+# Signing material. The config and update signing keys live in KMS/HSM — a leaked
+# key lets an attacker redirect user traffic or ship code as LocalSystem, so these
+# must never be committed even temporarily.
+*.pem
+*.pfx
+*.p12
+*.key
+secrets/

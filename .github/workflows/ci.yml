@@ -1,0 +1,35 @@
+# CI only: lint and build on every push.
+#
+# Deployment is handled by Vercel's Git integration, not by this workflow —
+# once the repository is imported at vercel.com, every push deploys
+# automatically and pull requests get preview URLs. No tokens or secrets are
+# needed in GitHub for that.
+#
+# The site also still builds for Cloudflare Workers via `npm run cf:build`
+# (vinext); that path is kept for reference but is not deployed from here.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (Next.js, what Vercel runs)
+        run: npm run build

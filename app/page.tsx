@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { MotionRuntime } from "./MotionRuntime";
+import { GameGrid, GameRail } from "./GameTiles";
+import { LiveConsole } from "./LiveConsole";
 
 const steps = [
   {
@@ -188,8 +190,10 @@ export default function Home() {
                 <span><i /></span><span><i /></span><span><i /></span>
               </div>
             </div>
+            {/* Was a made-up title ("Arena Strike"), which reads as a mockup and
+                undercuts the claim that we support real games. */}
             <div className="stage-chip chip-game">
-              <span>GAME DETECTED</span><strong>Arena Strike</strong>
+              <span>GAME DETECTED</span><strong>VALORANT</strong>
             </div>
             <div className="stage-chip chip-safe">
               <span>ROLLBACK</span><strong>Ready ✓</strong>
@@ -197,31 +201,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="live-console" id="product">
-          <div className="console-status">
-            <span className="console-game-icon">A</span>
-            <div><small>GAME DETECTED</small><strong>ARENA STRIKE</strong></div>
-          </div>
-          <div className="console-metric"><small>Direct</small><strong>52 <i>ms</i></strong></div>
-          <div className="console-pulse" aria-hidden="true"><i /><i /><i /><i /><i /></div>
-          <div className="console-metric accent"><small>Best route</small><strong>38 <i>ms</i></strong></div>
-          <div className="console-metric console-hide-mobile"><small>Jitter</small><strong>3 <i>ms</i></strong></div>
-          <a className="console-button" href="#beta"><span>ϟ</span> OPTIMIZE &amp; PLAY <i>››</i></a>
-        </div>
+        <LiveConsole />
       </section>
 
-      <section className="game-marquee" aria-label="Example supported games">
-        <div className="marquee-track">
-          {[
-            "FORTNITE", "VALORANT", "COUNTER-STRIKE 2", "APEX LEGENDS",
-            "LEAGUE OF LEGENDS", "ROBLOX", "ROCKET LEAGUE", "EVERY GAME",
-            "FORTNITE", "VALORANT", "COUNTER-STRIKE 2", "APEX LEGENDS",
-            "LEAGUE OF LEGENDS", "ROBLOX", "ROCKET LEAGUE", "EVERY GAME",
-          ].map((game, index) => (
-            <span key={`${game}-${index}`}><i />{game}</span>
-          ))}
-        </div>
-      </section>
+      {/* Replaced a scrolling list of game names in plain text. Players scan for
+          the game they play, and a text list gives them nothing to lock onto —
+          it also repeated titles and listed "EVERY GAME" as though it were one. */}
+      <GameRail />
 
       <section className="section product-showcase" aria-label="Desktop app preview">
         <div className="showcase-copy" data-reveal>
@@ -310,7 +296,7 @@ export default function Home() {
           <div className="proof-card-head">
             <div>
               <small>SESSION REPORT</small>
-              <strong>Arena Strike · Frankfurt</strong>
+              <strong>VALORANT · Frankfurt</strong>
             </div>
             <span>High confidence</span>
           </div>
@@ -360,6 +346,12 @@ export default function Home() {
               </div>
             </article>
           ))}
+        </div>
+
+        {/* The four mode cards explain the categories; this shows the actual
+            titles, which is what a player is looking for when they land here. */}
+        <div data-reveal>
+          <GameGrid />
         </div>
       </section>
 
